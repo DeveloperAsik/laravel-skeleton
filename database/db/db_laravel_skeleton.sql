@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
--- Host: localhost    Database: db_bibit_cms
+-- Host: localhost    Database: db_app_skeleton
 -- ------------------------------------------------------
 -- Server version	5.7.36-log
 

@@ -22,11 +22,11 @@ class UserController extends Controller {
     //put your code here
     public function index(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        return view('Public_html.Layouts.Adminlte.ajax', compact('title_for_layout'));
+        return view('Public_html.Layouts.Adminlte.home', compact('title_for_layout'));
     }
     public function login(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        return view('Public_html.Layouts.Adminlte.ajax', compact('title_for_layout'));
+        return view('Public_html.Layouts.Adminlte.login', compact('title_for_layout'));
     }
 
 }

@@ -1,16 +1,24 @@
 <!-- jQuery -->
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery/jquery.min.js"></script>
 <script src="{{config('app.base_assets_uri')}}/libs/jquery/jqueryui/jquery-ui.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap -->
+<script src="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap/js/bootstrap.js" type="text/javascript"></script>
 <!-- AdminLTE App -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/adminlte.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/adminlte.js"></script>
 
-<script src="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.js"></script> 
+<!-- PAGE PLUGINS -->
 <script src="{{config('app.base_assets_uri')}}/js/base64.js" type="text/javascript"></script>
+<script src="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.js"></script> 
 <script src="{{config('app.base_assets_uri')}}/js/dateFormat.min.js" type="text/javascript"></script>
-<script src="{{config('app.base_assets_uri')}}/libs/toastr/build/toastr.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
 <script src="{{config('app.base_assets_uri')}}/libs/bodymovin/5.6.5/lottie.js"></script>
+<!-- jQuery Mapael -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/raphael/raphael.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/chart.js/Chart.min.js"></script>
 
 <!-- END PAGE LEVEL PLUGINS -->
 <script>
@@ -114,7 +122,6 @@
 @endif
 <!-- load js lib / class / library from controller end here -->
 
-
 <!-- load global js lib for every controller start here -->
 @if ($_path_app_global_js)
     @include("{$_path_app_global_js}")
@@ -129,3 +136,4 @@
         @endif
     @endforeach
 @endif
+

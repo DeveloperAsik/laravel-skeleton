@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Backend;
  */
 
 use App\Http\Controllers\Controller;
+use App\Helpers\MyHelper;
 /**
  * Description of DefaultController
  *
@@ -23,6 +24,4 @@ class AuthController extends Controller {
         $title_for_layout = config('app.default_variables.title_for_layout');
         return view('Public_html.Layouts.Adminlte.login', compact('title_for_layout'));
     }
-
-
 }

@@ -1,25 +1,10 @@
 <!-- jQuery -->
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery/jquery.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/libs/jquery/jqueryui/jquery-ui.min.js"></script>
+
 <!-- Bootstrap -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/adminlte.js"></script>
-
-<!-- PAGE PLUGINS -->
-<!-- jQuery Mapael -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/raphael/raphael.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/jquery.mapael.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/maps/usa_states.min.js"></script>
-<!-- ChartJS -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/chart.js/Chart.min.js"></script>
-
-<!-- AdminLTE for demo purposes -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/demo.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes)
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/pages/dashboard2.js"></script> -->
+<script src="{{config('app.base_assets_uri')}}/libs/bootstrap/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
 
 <script src="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.js"></script> 
 <script src="{{config('app.base_assets_uri')}}/js/base64.js" type="text/javascript"></script>
@@ -27,7 +12,6 @@
 <script src="{{config('app.base_assets_uri')}}/libs/toastr/build/toastr.min.js"></script>
 <script src="{{config('app.base_assets_uri')}}/libs/bodymovin/5.6.5/lottie.js"></script>
 
-<!-- END PAGE LEVEL PLUGINS -->
 <script>
 @if(isset($_uuid) && !empty($_uuid))
     var _uuid = '{{$_uuid}}';
@@ -144,4 +128,3 @@
         @endif
     @endforeach
 @endif
-

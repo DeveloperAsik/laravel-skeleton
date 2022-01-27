@@ -6,7 +6,9 @@
     .change_password{
         display:none;
     }
-
+    .table-responsive-sm{
+        overflow: auto;
+    }
 </style>
 <section class="content">
     <div class="container-fluid">
@@ -21,7 +23,7 @@
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="nav-link active" href="#details" data-toggle="tab">Details</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="#details" data-toggle="tab">Details</a></li>
                             <li class="nav-item"><a class="nav-link" href="#prefferences" data-toggle="tab">Prefferences</a></li>
                             <li class="nav-item"><a class="nav-link" href="#group_permission" data-toggle="tab">Group & Permission</a></li>
                         </ul>
@@ -121,7 +123,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="last_education_institution" class="col-sm-3 control-label">Last Education Institution</label>
+                                        <label for="last_education_institution" class="col-sm-2 control-label">Last Education Institution</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" value="{{$user->user_profile->last_education_institution}}" name="last_education_institution" id="last_education_institution" placeholder="Last Education Institution">
                                         </div>
@@ -147,128 +149,131 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="group_permission">
-                                <div class="form-group">
-                                    <label for="Group" class="col-sm-2 control-label">Group</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" readonly="" value="{{$user->user_profile->group_name}}" name="group" id="Group" placeholder="Group">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="Group" class="col-sm-2 control-label">Group</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" readonly="" value="{{$user->user_profile->group_name}}" name="group" id="Group" placeholder="Group">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="add_permission" class="form-check-input" id="add_permission">
-                                            <label class="form-check-label" for="add_permission">Add new permission</label>
+                                    <div class="form-group">
+                                        <label for="Group" class="col-sm-2 control-label">Add new permission</label>
+                                        <div class="col-sm-10">
+                                            <input type="checkbox" name="add_permission" class="form-check-input">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card card-info" id="form_new_permission" style="display:none">
-                                    <!-- /.card-header -->
-                                    <!-- form start -->
-                                    <form class="form-horizontal">
-                                        <div class="card-body">
-                                            <div class="form-group row">
-                                                <label for="url" class="col-sm-2 control-label">url</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="url" class="form-control" id="url" placeholder="url">
+                                <div class="col-sm-12">
+                                    <div class="card card-info" id="form_new_permission" style="display:none">
+                                        <!-- /.card-header -->
+                                        <!-- form start -->
+                                        <form class="form-horizontal">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="url" class="col-sm-2 control-label">url</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="url" class="form-control" id="url" placeholder="url">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="module" class="col-sm-2 control-label">module</label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control" id="module" name="module">
-                                                        <option value="0">-- select one --</option>
-                                                        @if(isset($modules) && !empty($modules))
+                                                <div class="form-group row">
+                                                    <label for="module" class="col-sm-2 control-label">module</label>
+                                                    <div class="col-sm-10">
+                                                        <select class="form-control" id="module" name="module">
+                                                            <option value="0">-- select one --</option>
+                                                            @if(isset($modules) && !empty($modules))
                                                             @foreach($modules AS $keyword => $value)
-                                                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                                            <option value="{{$value->id}}">{{$value->name}}</option>
                                                             @endforeach
-                                                        @endif
-                                                    </select>
+                                                            @endif
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="route" class="col-sm-2 control-label">route</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="route" class="form-control" id="route" placeholder="route">
+                                                <div class="form-group row">
+                                                    <label for="route" class="col-sm-2 control-label">route</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="route" class="form-control" id="route" placeholder="route">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="class" class="col-sm-2 control-label">class</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="class" class="form-control" id="class" placeholder="class">
+                                                <div class="form-group row">
+                                                    <label for="class" class="col-sm-2 control-label">class</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="class" class="form-control" id="class" placeholder="class">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="method" class="col-sm-2 control-label">method</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="method" class="form-control" id="method" placeholder="method">
+                                                <div class="form-group row">
+                                                    <label for="method" class="col-sm-2 control-label">method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="method" class="form-control" id="method" placeholder="method">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="description" class="col-sm-2 control-label">description</label>
-                                                <div class="col-sm-10">
-                                                    <textarea class="form-control" name="description" id="description" name="description" ></textarea>
+                                                <div class="form-group row">
+                                                    <label for="description" class="col-sm-2 control-label">description</label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="form-control" name="description" id="description" name="description" ></textarea>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="is_generated_view" value="1"> Is Generated View
-                                                        </label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="is_generated_view" value="1"> Is Generated View
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="is_allowed" value="1"> Is Allowed
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="is_public" value="1"> Is Public 
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="is_allowed" value="1"> Is Allowed
-                                                        </label>
-                                                    </div>
-                                                </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button type="submit" id="submit_form_add_permission" class="btn btn-info">Submit</button>
+                                                <button type="submit" id="close_form_add_permission" class="btn btn-default float-right">Cancel</button>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="is_public" value="1"> Is Public 
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- /.card-body -->
-                                        <div class="card-footer">
-                                            <button type="submit" id="submit_form_add_permission" class="btn btn-info">Submit</button>
-                                            <button type="submit" id="close_form_add_permission" class="btn btn-default float-right">Cancel</button>
-                                        </div>
-                                        <!-- /.card-footer -->
-                                    </form>
-                                </div>
-                                <div class="card" style="background-color:#fff; color:#000">
-                                    <div class="card-header">
-                                        <h5>Group Permission</h5>
+                                            <!-- /.card-footer -->
+                                        </form>
                                     </div>
-                                    <div class="card-divider"></div>
-                                    <div class="card-table">
-                                        <div class="table-responsive-sm p-3">
-                                            <table style="width:100%;background-color:#fff;color:#000" class="table table-bordered" id="group_permissions">
-                                                <thead>
-                                                    <tr role="row" class="heading">
-                                                        <th>ID</th>
-                                                        <th>Url</th>
-                                                        <th>Module</th>
-                                                        <th>Route</th>
-                                                        <th>Class</th>
-                                                        <th>Method</th>
-                                                        <th>Group Name</th>
-                                                        <th>Description</th>
-                                                        <th>Is Active</th>
-                                                        <th>Generated View</th>
-                                                    </tr>							
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="card" style="background-color:#fff; color:#000">
+                                        <div class="card-header">
+                                            <h5>Group Permission</h5>
+                                        </div>
+                                        <div class="card-divider"></div>
+                                        <div class="card-table">
+                                            <div class="table-responsive-sm p-3">
+                                                <table style="width:100%;background-color:#fff;color:#000; font-size:10px;" class="table table-bordered" id="group_permissions">
+                                                    <thead>
+                                                        <tr role="row" class="heading">
+                                                            <th>ID</th>
+                                                            <th>Url</th>
+                                                            <th>Module</th>
+                                                            <th>Route</th>
+                                                            <th>Class</th>
+                                                            <th>Method</th>
+                                                            <th>Group Name</th>
+                                                            <th>Is Active</th>
+                                                            <th>Generated View</th>
+                                                        </tr>							
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

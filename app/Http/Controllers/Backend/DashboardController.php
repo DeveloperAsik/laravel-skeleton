@@ -30,7 +30,7 @@ class DashboardController extends Controller {
     //put your code here
     public function index(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout'));
     }
 
     public function profile(Request $request) {
@@ -65,7 +65,7 @@ class DashboardController extends Controller {
                 'path' => "Public_html.Modals.Extraweb.User.modal_change_picture"
             ]
         ];
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout', '_breadcrumb', '_modal_data', 'user'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumb', '_modal_data', 'user'));
     }
 
     public function profile_update(Request $request) {
@@ -108,7 +108,7 @@ class DashboardController extends Controller {
                 'path' => "Public_html.Modals.Extraweb.User.modal_change_picture"
             ]
         ];
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout', '_breadcrumb', '_modal_data', 'user', 'modules'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumb', '_modal_data', 'user', 'modules'));
     }
 
     
@@ -134,12 +134,12 @@ class DashboardController extends Controller {
 
     public function preference(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout'));
     }
 
     public function widget(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout'));
     }
 
 }

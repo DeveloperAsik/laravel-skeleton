@@ -38,7 +38,6 @@ var ProfileUpdateJS = function () {
                     {"data": "class"},
                     {"data": "method"},
                     {"data": "group_name"},
-                    {"data": "description"},
                     {"data": "is_active"},
                     {"data": "is_generated_view"}
                 ]

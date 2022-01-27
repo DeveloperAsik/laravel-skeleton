@@ -42,6 +42,9 @@ Route::prefix('extraweb')->group(function () {
         return AuthenticateUser::save_token($request->all());
     });
 
+    Route::get('/logout', function(Request $request) {
+        return redirect('/extraweb/login');
+    });
     Route::prefix('login')->group(function () {
         Route::get('/', function (Request $request) {
             $data = session()->all();
@@ -70,7 +73,7 @@ Route::prefix('extraweb')->group(function () {
         Route::get('/dashboard', 'App\Http\Controllers\Backend\DashboardController@index')->name('extraweb.dashboard');
         Route::get('/preference', 'App\Http\Controllers\Backend\DashboardController@preference')->name('extraweb.preference');
         Route::get('/widget', 'App\Http\Controllers\Backend\DashboardController@widget')->name('extraweb.widget');
-        
+
         Route::prefix('menu')->group(function () {
             Route::get('/view', 'App\Http\Controllers\Backend\MenuController@view')->name('extraweb.menu.view');
             Route::get('/tree_view', 'App\Http\Controllers\Backend\MenuController@tree_view')->name('extraweb.menu.tree_view');
@@ -84,7 +87,7 @@ Route::prefix('extraweb')->group(function () {
             Route::get('/update', 'App\Http\Controllers\Backend\DashboardController@profile_update')->name('extraweb.profile_update');
             Route::post('/upload_photo', 'App\Http\Controllers\Backend\DashboardController@fnUploadPhoto')->name('extraweb.fnUploadPhoto');
         });
-        
+
         Route::prefix('permission')->group(function () {
             Route::get('/view', 'App\Http\Controllers\Backend\PermissionController@view')->name('extraweb.permission.view');
             Route::post('/get_list', 'App\Http\Controllers\Backend\PermissionController@get_list')->name('extraweb.permission.get_list');

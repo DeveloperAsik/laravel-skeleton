@@ -2,12 +2,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 <!-- Font Awesome Icons -->
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/fontawesome-free/css/all.min.css">
-<!-- overlayScrollbars -->
-<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/dist/css/adminlte.min.css">
 
-<link href="{{config('app.base_assets_uri')}}/libs/toastr/build/toastr.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.css"/>
 
 <!-- BEGIN THEME STYLES -->
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.css">
