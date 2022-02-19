@@ -3,7 +3,7 @@
         return {
             //main function to initiate the module
             init: function () {
-                fnToaStr('PreferenceJS successfully load', 'success', {timeOut: 2000});
+                fnAlertStr('PreferenceJS successfully load', 'success', {timeOut: 2000});
             }
         };
     }();

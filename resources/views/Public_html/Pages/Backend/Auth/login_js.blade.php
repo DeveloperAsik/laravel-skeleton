@@ -10,13 +10,22 @@
             password: Base64.encode($('input[name="password"]').val())
         };
         var response = fnAjaxSend(formdata, uri, type, {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, false);
+        //console.log(response); return false;
         if (response.responseJSON.status.code === 200) {
-            fnToaStr(response.responseJSON.message, 'success', {timeOut: 2000});
+            fnAlertStr(response.responseJSON.message, 'success', {timeOut: 2000});
             var res = fnAjaxSend({token: response.responseJSON.data.token}, _base_extraweb_uri + '/save-token', 'POST', {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, false);
             if (res.status === 200) {
                 setTimeout(function () {
                     loadingBg('destroy');
-                    window.location = _base_extraweb_uri + '/dashboard';
+                    var session_destination_path = '{{$_session_destination_path}}';
+                    //console.log(session_destination_path);
+                    //return false;
+                    if(session_destination_path){
+                        //return false;
+                        window.location = session_destination_path;
+                    }else{
+                        window.location = _base_extraweb_uri + '/dashboard';
+                    }
                 }, 2000);
             } else {
                 setTimeout(function () {
@@ -78,7 +87,7 @@
         return {
             //main function to initiate the module
             init: function () {
-                fnToaStr('LoginJS successfully load', 'success', {timeOut: 2000});
+                fnAlertStr('LoginJS successfully load', 'success', {type:'toastr', timeOut: 2000});
                 handleLogin();
                 $('#remember').on('click', function () {
                     var checkedValue = $('#remember:checked').val();
@@ -94,9 +103,9 @@
                         };
                         var response = fnAjaxSend(formdata, uri, type, {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, false);
                         if (response.responseJSON.status === 200) {
-                            fnToaStr(response.responseJSON.message, 'success', {timeOut: 2000});
+                            fnAlertStr(response.responseJSON.message, 'success', {timeOut: 2000});
                         } else {
-                            fnToaStr(response.responseJSON.message, 'error', {timeOut: 2000});
+                            fnAlertStr(response.responseJSON.message, 'error', {timeOut: 2000});
                         }
                     } else {
                         //remove cookies save username and password (hash)

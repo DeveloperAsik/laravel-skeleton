@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function () {
         });
         Route::prefix('product')->group(function () {
             Route::get('/get-list', 'App\Http\Controllers\Api\ProductController@get_list')->name('api.product.get_list');
-            Route::get('/get-stock-list', 'App\Http\Controllers\Api\ProductController@get_stock_list')->name('api.product.get_list');
+            Route::get('/get-stock-list', 'App\Http\Controllers\Api\ProductController@get_stock_list')->name('api.product.get_stock_list');
             Route::post('/insert', 'App\Http\Controllers\Api\ProductController@insert')->name('api.product.insert');
             Route::post('/update/{id}', 'App\Http\Controllers\Api\ProductController@update')->name('api.product.update');
             Route::get('/remove/{id}', 'App\Http\Controllers\Api\ProductController@remove')->name('api.product.remove');

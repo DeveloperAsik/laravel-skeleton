@@ -7,7 +7,7 @@ var MenuViewJS = function () {
     return {
         //main function to initiate the module
         init: function () {
-            fnToaStr('MenuViewJS successfully load', 'success', {timeOut: 2000});
+            fnAlertStr('MenuViewJS successfully load', 'success', {timeOut: 2000});
             var table = $('#menu').DataTable({
                 "sPaginationType": "bootstrap",
                 "paging": true,

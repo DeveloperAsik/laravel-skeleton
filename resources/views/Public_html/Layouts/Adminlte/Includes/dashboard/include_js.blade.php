@@ -1,24 +1,33 @@
 <!-- jQuery -->
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery/jquery.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/libs/jquery/jqueryui/jquery-ui.min.js"></script>
-<!-- Bootstrap -->
-<script src="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 4 -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- daterangepicker -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/moment/moment.min.js"></script>
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/adminlte.js"></script>
-
-<!-- PAGE PLUGINS -->
+<!-- AdminLTE for demo purposes
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/demo.js"></script> -->
+<!-- custome libs -->
 <script src="{{config('app.base_assets_uri')}}/js/base64.js" type="text/javascript"></script>
-<script src="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.js"></script> 
 <script src="{{config('app.base_assets_uri')}}/js/dateFormat.min.js" type="text/javascript"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/libs/bodymovin/5.6.5/lottie.js"></script>
-<!-- jQuery Mapael -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/raphael/raphael.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/jquery.mapael.min.js"></script>
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/jquery-mapael/maps/usa_states.min.js"></script>
-<!-- ChartJS -->
-<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/chart.js/Chart.min.js"></script>
 
 <!-- END PAGE LEVEL PLUGINS -->
 <script>
@@ -62,7 +71,7 @@
 @else
     var _is_logged_in = '';
 @endif
-@if($_env)) 
+@if($_env)
     var _env = '{{$_env}}';
 @else
     var _env = '';

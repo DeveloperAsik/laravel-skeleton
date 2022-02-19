@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Http\Middleware\Auth;
-use App\Http\Middleware\AuthenticateUser;
+use App\Http\Middleware\Authenticate;
 
 /*
   |--------------------------------------------------------------------------
@@ -15,71 +14,49 @@ use App\Http\Middleware\AuthenticateUser;
   | contains the "web" middleware group. Now create something great!
   |
  */
+Route::middleware(['auth'])->group(function ($e) {
+    /*
+     * 
+     * front end routes start here
+     * 
+     */
 
-Route::get('/', 'App\Http\Controllers\Frontend\UserController@index')->name('fe.index');
-Route::get('/login', 'App\Http\Controllers\Frontend\UserController@login')->name('fe.login');
-Route::get('/forgot-password', 'App\Http\Controllers\Frontend\UserController@forgot_password')->name('fe.forgot-password');
-Route::get('/register', 'App\Http\Controllers\Frontend\UserController@register')->name('fe.register');
+    Route::get('/', 'App\Http\Controllers\Frontend\UserController@index')->name('fe.index');
 
-Route::post('/validate-token', function (Request $request) {
-    return Auth::handle($request);
-});
+    /*
+     * 
+     * front end routes end here
+     * 
+     */
 
-Route::group(['middleware' => 'auth.frontend'], function($e) {
-    Route::prefix('profile')->group(function () {
-        Route::get('/', 'App\Http\Controllers\Frontend\ProfileController@index')->name('fe.profile.index');
-    });
-});
-
-Route::prefix('extraweb')->group(function () {
-    Route::redirect('/', '/extraweb/login');
-
-    Route::post('/validate-user', function (Request $request) {
-        return AuthenticateUser::run($request->all());
-    });
-
-    Route::post('/save-token', function (Request $request) {
-        return AuthenticateUser::save_token($request->all());
-    });
-
-    Route::get('/logout', function(Request $request) {
-        return redirect('/extraweb/login');
-    });
-    Route::prefix('login')->group(function () {
-        Route::get('/', function (Request $request) {
-            $data = session()->all();
-            if (isset($data['_session_is_logged_in']) && !empty($data['_session_is_logged_in']) && $data['_session_is_logged_in'] == true) {
-                return redirect('/extraweb/dashboard');
-            } else {
-                $title_for_layout = config('app.default_variables.title_for_layout');
-                $_default_views = array(
-                    'class' => 'Auth',
-                    'method' => 'login',
-                    'html' => 'Public_html.Pages.Backend.Auth.login_html',
-                    'js' => 'Public_html.Pages.Backend.Auth.login_js'
-                );
-                $path_app_global_js = 'Public_html.Helpers.global_js';
-                return view('Public_html.Layouts.Adminlte.login', ['title_for_layout' => $title_for_layout, '_default_views' => $_default_views, '_path_app_global_js' => $path_app_global_js, '_env' => config('env')]);
-            }
-        });
-    });
-
-    Route::prefix('ajax')->group(function () {
-        Route::get('/get/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_get')->name('extraweb.ajax_get');
-        Route::post('/post/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_post')->name('extraweb.ajax_post');
-    });
-
-    Route::group(['middleware' => 'auth.backend'], function($e) {
+    /*
+     * 
+     * back end routes start here
+     * 
+     */
+    Route::group(['prefix' => 'extraweb'], function($e) {
+        Route::get('/login', 'App\Http\Controllers\Backend\AuthController@login')->name('extraweb.login');
+        Route::get('/logout', 'App\Http\Controllers\Backend\AuthController@logout')->name('extraweb.logout');
+        Route::post('/validate-user', function (Request $request) {
+            return Authenticate::validate_user($request->all());
+        })->name('extraweb.validate');
+        Route::post('/save-token', function (Request $request) {
+            return Authenticate::save_token($request->all());
+        })->name('extraweb.save_token');
         Route::get('/dashboard', 'App\Http\Controllers\Backend\DashboardController@index')->name('extraweb.dashboard');
-        Route::get('/preference', 'App\Http\Controllers\Backend\DashboardController@preference')->name('extraweb.preference');
-        Route::get('/widget', 'App\Http\Controllers\Backend\DashboardController@widget')->name('extraweb.widget');
-
+        
+        Route::prefix('ajax')->group(function () {
+            Route::get('/get/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_get')->name('extraweb.ajax_get');
+            Route::post('/post/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_post')->name('extraweb.ajax_post');
+        });
+        
         Route::prefix('menu')->group(function () {
             Route::get('/view', 'App\Http\Controllers\Backend\MenuController@view')->name('extraweb.menu.view');
+             Route::get('/create', 'App\Http\Controllers\Backend\MenuController@create')->name('extraweb.menu.create');
             Route::get('/tree_view', 'App\Http\Controllers\Backend\MenuController@tree_view')->name('extraweb.menu.tree_view');
             Route::post('/get_list', 'App\Http\Controllers\Backend\MenuController@get_list')->name('extraweb.menu.get_list');
             Route::get('/edit/{id}', 'App\Http\Controllers\Backend\MenuController@edit')->name('extraweb.menu.edit');
-            Route::post('/update/{method}', 'App\Http\Controllers\Backend\MenuController@update')->name('extraweb.menu.update');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\MenuController@update')->name('extraweb.menu.update');
         });
 
         Route::prefix('profile')->group(function () {
@@ -88,20 +65,41 @@ Route::prefix('extraweb')->group(function () {
             Route::post('/upload_photo', 'App\Http\Controllers\Backend\DashboardController@fnUploadPhoto')->name('extraweb.fnUploadPhoto');
         });
 
+        Route::prefix('user')->group(function () {
+            Route::get('/view', 'App\Http\Controllers\Backend\UsersController@view')->name('extraweb.users.view');
+            Route::post('/get_list', 'App\Http\Controllers\Backend\UsersController@get_list')->name('extraweb.users.get_list');
+            Route::get('/edit/{id}', 'App\Http\Controllers\Backend\UsersController@edit')->name('extraweb.users.edit');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\UsersController@update')->name('extraweb.users.update');
+        });
+
+        Route::prefix('group')->group(function () {
+            Route::get('/view', 'App\Http\Controllers\Backend\GroupsController@view')->name('extraweb.group.view');
+            Route::post('/get_list', 'App\Http\Controllers\Backend\GroupsController@get_list')->name('extraweb.group.get_list');
+            Route::get('/edit/{id}', 'App\Http\Controllers\Backend\GroupsController@edit')->name('extraweb.group.edit');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\GroupsController@update')->name('extraweb.group.update');
+        });
+
         Route::prefix('permission')->group(function () {
             Route::get('/view', 'App\Http\Controllers\Backend\PermissionController@view')->name('extraweb.permission.view');
+            Route::get('/create', 'App\Http\Controllers\Backend\PermissionController@create')->name('extraweb.permission.create');
             Route::post('/get_list', 'App\Http\Controllers\Backend\PermissionController@get_list')->name('extraweb.permission.get_list');
             Route::get('/edit/{id}', 'App\Http\Controllers\Backend\PermissionController@edit')->name('extraweb.permission.edit');
-            Route::post('/update/{method}', 'App\Http\Controllers\Backend\PermissionController@update')->name('extraweb.permission.update');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\PermissionController@update')->name('extraweb.permission.update');
+            Route::post('/insert', 'App\Http\Controllers\Backend\PermissionController@insert')->name('extraweb.permission.insert');
         });
 
         Route::prefix('group_permission')->group(function () {
-            Route::get('/view', 'App\Http\Controllers\Backend\GroupPermissionController@view')->name('extraweb.group_permission.view');
-            Route::post('/get_list', 'App\Http\Controllers\Backend\GroupPermissionController@get_list')->name('extraweb.group_permission.get_list');
-            Route::get('/edit/{id}', 'App\Http\Controllers\Backend\GroupPermissionController@edit')->name('extraweb.group_permission.edit');
-            Route::post('/update/{method}', 'App\Http\Controllers\Backend\GroupPermissionController@update')->name('extraweb.group_permission.update');
+            Route::get('/view', 'App\Http\Controllers\Backend\GroupsPermissionsController@view')->name('extraweb.group_permission.view');
+            Route::post('/get_list', 'App\Http\Controllers\Backend\GroupsPermissionsController@get_list')->name('extraweb.group_permission.get_list');
+            Route::get('/edit/{id}', 'App\Http\Controllers\Backend\GroupsPermissionsController@edit')->name('extraweb.group_permission.edit');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\GroupsPermissionsController@update')->name('extraweb.group_permission.update');
         });
     });
+    /*
+     * 
+     * back end routes end here
+     * 
+     */
 });
 
 
@@ -110,17 +108,7 @@ Route::get('/get-all-session', function (Request $request) {
 });
 
 Route::get('/flush-session', function (Request $request) {
-    session()->forget('_session_token');
-    session()->forget('_session_token_refreshed');
-    session()->forget('_session_user_id');
-    session()->forget('_session_group_id');
-    session()->forget('_session_is_logged_in');
-    session()->forget('_session_expiry_date');
-    session()->forget('_session_user_name');
-    session()->forget('_session_user_email');
-    session()->forget('alert-msg');
-    session()->flush();
-    session()->save();
+    Authenticate::clear_session();
     dd(session()->all());
 });
 

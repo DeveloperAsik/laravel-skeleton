@@ -1,13 +1,13 @@
 <script>
-    var ViewJS = function () {
+    var EditJS = function () {
         return {
             //main function to initiate the module
             init: function () {
-                fnToaStr('ViewJS successfully load', 'success', {timeOut: 2000});
+                fnAlertStr('EditJS successfully load', 'success', {timeOut: 2000});
             }
         };
     }();
     jQuery(document).ready(function () {
-        ViewJS.init();
+        EditJS.init();
     });
 </script>

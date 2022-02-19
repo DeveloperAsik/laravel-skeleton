@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace App\Models;
+namespace App\Models\Tables;
 
 use App\Models\MY_Model;
 use App\Helpers\MyHelper;

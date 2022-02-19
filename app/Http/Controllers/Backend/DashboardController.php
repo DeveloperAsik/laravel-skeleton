@@ -17,8 +17,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\MyHelper;
 use Illuminate\Support\Facades\DB;
-use App\Models\Tbl_user_a_permissions;
-use App\Models\Tbl_user_a_users;
+use App\Models\Tables\Tbl_user_a_permissions;
+use App\Models\Tables\Tbl_user_a_users;
 
 /**
  * Description of Dashboard

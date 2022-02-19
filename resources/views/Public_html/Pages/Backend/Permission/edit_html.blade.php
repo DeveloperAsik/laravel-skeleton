@@ -1,13 +1,11 @@
 <section class="content">
     <div class="container-fluid">
         <!-- Info boxes -->
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Permission edit form page</h5>
-
+                        <h5 class="card-title">Update Permission form page</h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
@@ -38,18 +36,21 @@
                                         <div class="form-group row">
                                             <label for="url" class="col-sm-2 control-label">url</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="url" class="form-control" id="url" placeholder="url">
+                                                <input type="text" name="url" class="form-control" id="url" placeholder="url" value="{{$permission->url}}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="module" class="col-sm-2 control-label">module</label>
                                             <div class="col-sm-10">
-                                                <select class="form-control" id="module" name="module">
-                                                    <option value="0">-- select one --</option>
+                                                <select class="form-control" id="module" name="module_id">
                                                     @if(isset($modules) && !empty($modules))
-                                                    @foreach($modules AS $keyword => $value)
-                                                    <option value="{{$value->id}}">{{$value->name}}</option>
-                                                    @endforeach
+                                                        @foreach($modules AS $keyword => $value)
+                                                            @if($permission->module_id == $value->id) 
+                                                                <option value="{{$value->id}}" selected>{{$value->name}}</option>
+                                                            @else
+                                                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                                            @endif
+                                                        @endforeach
                                                     @endif
                                                 </select>
                                             </div>
@@ -57,50 +58,30 @@
                                         <div class="form-group row">
                                             <label for="route" class="col-sm-2 control-label">route</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="route" class="form-control" id="route" placeholder="route">
+                                                <input type="text" name="route_name" class="form-control" id="route_name" placeholder="route_name" value="{{$permission->route_name}}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="class" class="col-sm-2 control-label">class</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="class" class="form-control" id="class" placeholder="class">
+                                                <input type="text" name="class" class="form-control" id="class" placeholder="class" value="{{$permission->class}}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="method" class="col-sm-2 control-label">method</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="method" class="form-control" id="method" placeholder="method">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="description" class="col-sm-2 control-label">description</label>
-                                            <div class="col-sm-10">
-                                                <textarea class="form-control" name="description" id="description" name="description" ></textarea>
+                                                <input type="text" name="method" class="form-control" id="method" placeholder="method" value="{{$permission->method}}">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-offset-2 col-sm-10">
                                                 <div class="checkbox">
+                                                    @php $is_active = ''; $is_active_value = 0;@endphp
+                                                    @if ($permission->is_active == 1) 
+                                                        @php $is_active = ' checked'; $is_active_value = 1;@endphp
+                                                    @endif
                                                     <label>
-                                                        <input type="checkbox" name="is_generated_view" value="1"> Is Generated View
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="is_allowed" value="1"> Is Allowed
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="is_public" value="1"> Is Public 
+                                                        <input type="checkbox"{{$is_active}} value="{{$is_active_value}}" name="is_active"> Is Active 
                                                     </label>
                                                 </div>
                                             </div>
@@ -108,8 +89,8 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
+                                        <input type="text" value="{{$permission->id}}" name="id" hidden />
                                         <button type="submit" id="submit_form_add_permission" class="btn btn-info">Submit</button>
-                                        <button type="submit" id="close_form_add_permission" class="btn btn-default float-right">Cancel</button>
                                     </div>
                                     <!-- /.card-footer -->
                                 </form>

@@ -11,8 +11,8 @@
                     </div>
                     <div class="card-divider"></div>
                     <div class="card-table">
-                        <div class="table-responsive-sm p-3">
-                            <table style="width:100%;background-color:#fff;color:#000" class="table table-bordered" id="menu">
+                        <div class="table-responsive-sm p-3" style="overflow:auto">
+                            <table style="width:100%;background-color:#fff;color:#000;" class="table table-bordered" id="menu">
                                 <thead>
                                     <tr role="row" class="heading">
                                         <th>ID</th>

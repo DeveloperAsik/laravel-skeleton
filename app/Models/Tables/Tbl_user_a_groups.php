@@ -6,19 +6,19 @@
  * and open the template in the editor.
  */
 
-namespace App\Models;
+namespace App\Models\Tables;
 
 use App\MY_Model;
 
 /**
- * Description of Tbl_user_a_profiles
+ * Description of Tbl_user_a_groups
  *
  * @author I00396.ARIF
  */
-class Tbl_user_a_profiles extends MY_Model {
+class Tbl_user_a_groups extends MY_Model {
 
     //put your code here  
-    protected $table_name = 'tbl_user_a_profiles';
+    protected $table_name = 'tbl_user_a_groups';
 
     public function __construct() {
         parent::__construct();

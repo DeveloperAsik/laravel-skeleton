@@ -1,5 +1,5 @@
-<div class="modal fade" id="modal_edit_node" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal_edit_node" tabindex="-1" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="z-index:1050">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Update Menu</h4>
@@ -15,7 +15,7 @@
                                 <div class="form-group row">
                                     <label for="name" class="col-sm-2 control-label">name</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="name" class="form-control" id="name" placeholder="name">
+                                        <input type="text" name="title" class="form-control" id="name" placeholder="name">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -100,6 +100,8 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
+                <input type="text" name="menu_id" id="menu_id" value="0" style="display:none" />
+                <input type="text" name="parent_id" id="parent_id" value="0" style="display:none" />
                 <button type="button" class="btn btn-default" id="close_modal_edit_node" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="submit_modal_edit_node">Save changes</button>
             </div>

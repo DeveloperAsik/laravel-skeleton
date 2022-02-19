@@ -10,9 +10,8 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Helpers\MyHelper;
 use Illuminate\Support\Facades\DB;
-use App\Http\Middleware\TokenUser;
+use App\Models\Tables\Tbl_user_a_modules;
 
 /**
  * Description of MenuController
@@ -22,9 +21,38 @@ use App\Http\Middleware\TokenUser;
 class MenuController extends Controller {
 
     //put your code here
+    public function create(Request $request) {
+        $title_for_layout = config('app.default_variables.title_for_layout');
+        $_breadcrumbs = [
+            [
+                'id' => 1,
+                'title' => 'Dashboard',
+                'icon' => '',
+                'arrow' => true,
+                'path' => config('app.base_extraweb_uri')
+            ],
+            [
+                'id' => 2,
+                'title' => 'Menu list',
+                'icon' => '',
+                'arrow' => true,
+                'path' => config('app.base_extraweb_uri') . '/menu/tree_view'
+            ],
+            [
+                'id' => 2,
+                'title' => 'Create new Menu',
+                'icon' => '',
+                'arrow' => false,
+                'path' => config('app.base_extraweb_uri') . '/menu/create'
+            ]
+        ];
+        $modules = Tbl_user_a_modules::fnGetModules($request);
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'modules'));
+    }
+
     public function view(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        $_breadcrumb = [
+        $_breadcrumbs = [
             [
                 'id' => 1,
                 'title' => 'Dashboard',
@@ -37,16 +65,16 @@ class MenuController extends Controller {
                 'title' => 'Menu',
                 'icon' => '',
                 'arrow' => false,
-                'path' => config('app.base_extraweb_uri') . '/menu/view'
+                'path' => config('app.base_extraweb_uri') . '/menu/tree_view'
             ]
         ];
         $module = DB::table('tbl_user_a_modules AS a')->get();
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout', '_breadcrumb', 'module'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'module'));
     }
 
     public function tree_view(Request $request) {
         $title_for_layout = config('app.default_variables.title_for_layout');
-        $_breadcrumb = [
+        $_breadcrumbs = [
             [
                 'id' => 1,
                 'title' => 'Dashboard',
@@ -63,7 +91,7 @@ class MenuController extends Controller {
             ]
         ];
         $module = DB::table('tbl_user_a_modules AS a')->get();
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout', '_breadcrumb', 'module'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'module'));
     }
 
     public function get_list(Request $request) {
@@ -76,12 +104,12 @@ class MenuController extends Controller {
                 $r = ($start / $length);
                 $page = $r + 1;
             }
-            $limit = ($request->limit) ? $request->limit : 10;
-            $offset = ($request->offset) ? $request->offset : 0;
+            $limit = ($request->length) ? $request->length : 10;
+            $offset = ($request->start) ? $request->start : 0;
             $search = $request['search']['value'];
             if (isset($search) && !empty($search)) {
-                $data = DB::table('tbl_menu_a_menus AS a')
-                        ->select('a.id', 'a.name', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.rank', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
+                $data = DB::table('tbl_user_c_extraweb_sidebars AS a')
+                        ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.rank', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
                         ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
                         ->where('b.url', 'like', '%' . $search . '%')
                         ->orWhere('c.name', 'like', '%' . $search . '%')
@@ -94,15 +122,15 @@ class MenuController extends Controller {
                         ->limit($limit)
                         ->get();
             } else {
-                $data = DB::table('tbl_menu_a_menus AS a')
-                        ->select('a.id', 'a.name', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
+                $data = DB::table('tbl_user_c_extraweb_sidebars AS a')
+                        ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
                         ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
                         ->orderBy('a.id', 'ASC')
                         ->offset($offset)
                         ->limit($limit)
                         ->get();
             }
-            $total_rows = DB::table('tbl_menu_a_menus AS a')->count();
+            $total_rows = DB::table('tbl_user_c_extraweb_sidebars AS a')->count();
             if (isset($data) && !empty($data)) {
                 $arr = array();
                 foreach ($data AS $keyword => $value) {
@@ -121,7 +149,7 @@ class MenuController extends Controller {
                     }
                     $arr[] = [
                         'id' => $value->id,
-                        'name' => $value->name,
+                        'name' => $value->title,
                         'icon' => $value->icon,
                         'badge' => $value->badge,
                         'badge_value' => $value->badge_value,
@@ -181,7 +209,7 @@ class MenuController extends Controller {
             ]
         ];
         $modules = Tbl_user_a_permissions::fnGetModules($request);
-        return view('Public_html.Layouts.Adminlte.index', compact('title_for_layout', '_breadcrumb', 'modules'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumb', 'modules'));
     }
 
 }

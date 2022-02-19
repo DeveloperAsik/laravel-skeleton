@@ -3,7 +3,7 @@
         return {
             //main function to initiate the module
             init: function () {
-                fnToaStr('WidgetJS successfully load', 'success', {timeOut: 2000});
+                fnAlertStr('WidgetJS successfully load', 'success', {timeOut: 2000});
             }
         };
     }();

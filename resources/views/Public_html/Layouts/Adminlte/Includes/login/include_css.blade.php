@@ -6,9 +6,10 @@
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/dist/css/adminlte.min.css">
-
-<link href="{{config('app.base_assets_uri')}}/libs/toastr/build/toastr.min.css" rel="stylesheet"/>
-
+<!-- SweetAlert2 -->
+<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<!-- Toastr -->
+<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/toastr/toastr.min.css">
 <!-- BEGIN THEME STYLES -->
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.css">
 <link rel="stylesheet" href="{{config('app.base_assets_uri')}}/libs/slick/slick/slick-theme.css">

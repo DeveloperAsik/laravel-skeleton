@@ -20,4 +20,14 @@ class MY_Model extends Model {
 
     //put your code here
     use HasFactory;
+
+
+    public function scopeIsActive($request) {
+        $request->where('is_active', 1);
+    }
+
+    public function scopeIsNotActive($request) {
+        $request->where('is_active', 0);
+    }
+
 }

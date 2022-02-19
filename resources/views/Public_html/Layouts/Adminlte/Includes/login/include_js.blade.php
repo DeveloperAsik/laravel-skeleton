@@ -5,13 +5,14 @@
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/js/adminlte.min.js"></script>
-
+<!-- SweetAlert2 -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/toastr/toastr.min.js"></script>
 <script src="{{config('app.base_assets_uri')}}/libs/slick/slick/slick.js"></script> 
 <script src="{{config('app.base_assets_uri')}}/js/base64.js" type="text/javascript"></script>
 <script src="{{config('app.base_assets_uri')}}/js/dateFormat.min.js" type="text/javascript"></script>
-<script src="{{config('app.base_assets_uri')}}/libs/toastr/build/toastr.min.js"></script>
 <script src="{{config('app.base_assets_uri')}}/libs/bodymovin/5.6.5/lottie.js"></script>
-
 <!-- END PAGE LEVEL PLUGINS -->
 <script>
 @if(isset($_uuid) && !empty($_uuid))

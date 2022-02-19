@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\Helpers\MyHelper;
 use View;
-use App\Models\Tbl_user_c_extraweb_sidebars AS Tbl_extraweb_sidebar;
+use App\Models\Tables\Tbl_user_c_sidebars;
 
 class Controller extends BaseController {
 
@@ -69,7 +69,7 @@ class Controller extends BaseController {
         //init date now
         View::share('_date_now', MyHelper::idnDate('l, j F Y H:i'));
         //env
-        View::share('_env', config('env'));
+        View::share('_env', config('app.env'));
 
         //init days name
         $days_name = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -127,15 +127,15 @@ class Controller extends BaseController {
         $arr_breadcrumbs = [
             [
                 'id' => 1,
-                'title' => 'Home',
+                'title' => 'Dashboard',
                 'icon' => '',
                 'arrow' => false,
                 'path' => config('app.url')
             ]
         ];
-        View::share('breadcrumbs', json_decode(json_encode($arr_breadcrumbs)));
+        View::share('_breadcrumbs', $arr_breadcrumbs);
         if (isset($this->__group_id) && !empty($this->__group_id)) {
-            $sidebar_menu = Tbl_extraweb_sidebar::get_sidebar_menu($request, $this->__group_id);
+            $sidebar_menu = Tbl_user_c_sidebars::get_sidebar_menu($request, $this->__group_id);
             if (isset($sidebar_menu) && !empty($sidebar_menu)) {
                 View::share('_sidebar_menu', json_decode(json_encode($sidebar_menu)));
             }

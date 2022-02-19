@@ -598,27 +598,41 @@ class MyHelper {
         // verify it matches the signature provided in the jwt
         $is_signature_valid = ($base64_url_signature === $signature_provided);
         $user = json_decode($payload);
-        $token_exist = DB::table('tbl_user_c_tokens AS a')->select('a.id', 'a.token')->where('a.user_id', '=', $user->user_id)->first();
-        if ($token_exist->token == $jwt) {
-            if ($is_token_expired || !$is_signature_valid) {
-                DB::table('tbl_user_c_tokens')->where('user_id', $user->user_id)->update([
-                    'expiry_date' => date('Y-m-d H:i:s', strtotime('+12 Hours')),
-                    'is_logged_in' => 0,
-                    'created_by' => 1,
-                    'updated_date' => date('Y-m-d H:i:s'),
-                ]);
-                return false;
-            } else {
-                DB::table('tbl_user_c_tokens')->where('user_id', $user->user_id)->update([
-                    'expiry_date' => date('Y-m-d H:i:s', strtotime('+12 Hours')),
-                    'is_logged_in' => 1,
-                    'created_by' => 1,
-                    'updated_date' => date('Y-m-d H:i:s'),
-                ]);
-                return true;
-            }
-        } else {
+        $is_expired = false;
+        if ($user->expired_date < strtotime(date('Y-m-d H:i:s'))) {
+            $is_expired = true;
+            DB::table('tbl_user_c_tokens')->where('created_by', $user->user_id)->update([
+                'is_logged_in' => 0,
+                'is_expiry' => 1,
+                'updated_by' => $user->user_id,
+                'updated_date' => date('Y-m-d H:i:s'),
+            ]);
             return false;
+        } else {
+            $token_exist = DB::table('tbl_user_c_tokens AS a')->select('a.id', 'a.token')->where('a.created_by', '=', $user->user_id)->first();
+            if ($token_exist->token == $jwt) {
+                if ($is_token_expired || !$is_signature_valid) {
+                    DB::table('tbl_user_c_tokens')->where('created_by', $user->user_id)->update([
+                        'expiry_date' => date('Y-m-d H:i:s', strtotime('+12 Hours')),
+                        'is_logged_in' => 0,
+                        'is_expiry' => 1,
+                        'updated_by' => $user->user_id,
+                        'updated_date' => date('Y-m-d H:i:s'),
+                    ]);
+                    return false;
+                } else {
+                    DB::table('tbl_user_c_tokens')->where('created_by', $user->user_id)->update([
+                        'expiry_date' => date('Y-m-d H:i:s', strtotime('+12 Hours')),
+                        'is_logged_in' => 1,
+                        'is_expiry' => 0,
+                        'updated_by' => $user->user_id,
+                        'updated_date' => date('Y-m-d H:i:s'),
+                    ]);
+                    return true;
+                }
+            } else {
+                return false;
+            }
         }
     }
 

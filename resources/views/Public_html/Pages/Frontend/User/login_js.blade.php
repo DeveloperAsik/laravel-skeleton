@@ -3,7 +3,7 @@
         return {
             //main function to initiate the module
             init: function () {
-                fnToaStr('LoginJS successfully load', 'success', {timeOut: 2000});
+                fnAlertStr('LoginJS successfully load', 'success', {timeOut: 2000});
             }
         };
     }();
