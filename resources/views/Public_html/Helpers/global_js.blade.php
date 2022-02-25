@@ -127,7 +127,7 @@
         if (action === 'start' && el == '') {
             console.log('load bg');
             //$('.parent-loader').css('display', 'block');
-            $('body').append('<div id="loading_bg" style="z-index:9999; background-color:#f9f9fb; opacity:0.8; width:100%; height:100%; position: fixed; top:0px; left:0px"><button style="position:fixed; top: 40%; left: 50%; background-color: transparent; border: none; color: #fff;" class="btn btn-primary btn-loading btn-xl btn-svg-icon"><svg width="16px" height="16px"><use xlink:href="' + _base_assets_url + '/images/loading/sprite.svg#quickview-16"></use></svg></button></div>');
+            $('body').append('<div id="loading_bg" style="z-index:9998; background-color:#f9f9fb; opacity:0.8; width:100%; height:100%; position: fixed; top:0px; left:0px"><button style="position:fixed; top: 40%; left: 50%; background-color: transparent; border: none; color: #fff;" class="btn btn-primary btn-loading btn-xl btn-svg-icon"><svg width="16px" height="16px"><use xlink:href="' + _base_assets_url + '/images/loading/sprite.svg#quickview-16"></use></svg></button></div>');
         } else {
             if (el) {
                 var color = 'rgb(204, 51, 51)';
@@ -138,7 +138,7 @@
             }
             //$('.parent-loader').css('display', 'none');
             $('#loading_bg').remove();
-    }
+        }
     };
     var loadingImg = function (el, act, opt) {
         if (!el)
@@ -154,9 +154,11 @@
             name: "Loading cuy... sabar ye", // Name for future reference. Optional.
         });
         if (act === 'play' || act == 'start') {
+            loadingBg('start');
             $('#' + el).show();
             animation.play();
         } else if (act === 'destroy' || act === 'stop') {
+            loadingBg('stop');
             animation.destroy();
             $('#' + el).hide();
         }
@@ -191,7 +193,7 @@
     jQuery(document).ready(function () {
         Globaljs.init();
     });
-    jQuery(window).on("load", function () {
-        fnAlertStr('page completed load', 'success', {type:'toastr', timeOut: 2000});
-    });
+    //jQuery(window).on("load", function () {
+    //    fnAlertStr('page completed load', 'success', {type:'toastr', timeOut: 2000});
+    //});
 </script>

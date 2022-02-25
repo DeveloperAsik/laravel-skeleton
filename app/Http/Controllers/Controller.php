@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Helpers\MyHelper;
 use View;
 use App\Models\Tables\Tbl_user_c_sidebars;
+use App\Models\Tables\Tbl_logs;
 
 class Controller extends BaseController {
 
@@ -18,6 +19,7 @@ class Controller extends BaseController {
         ValidatesRequests;
 
     public function __construct(Request $request) {
+        $this->table_name = 'tbl_logs';
         $header = $request->header('Authorization');
         if (isset($header) && !empty($header)) {
             $tokenParts = explode('.', $header);
@@ -108,7 +110,7 @@ class Controller extends BaseController {
                 'id' => 1,
                 'title' => 'Profile',
                 'key' => 'profile',
-                'path' => config('app.base_extraweb_uri') . '/profile'
+                'path' => config('app.base_extraweb_uri') . '/profile/view'
             ],
             [
                 'id' => 2,
@@ -140,6 +142,28 @@ class Controller extends BaseController {
                 View::share('_sidebar_menu', json_decode(json_encode($sidebar_menu)));
             }
         }
+
+        //insert into logs
+        $fraud_scan = 'guest user access page with class ' . $class_name . ' and method ' . $method_name . ' at ' . MyHelper::getDateNow();
+        $user_id = 1;
+        if (isset($this->__user_id) && !empty($this->__user_id)) {
+            $fraud_scan = 'User ' . $this->__user_name . ' do access page with class ' . $class_name . ' and method ' . $method_name . ' at ' . MyHelper::getDateNow();
+            $user_id = $this->__user_id;
+        }
+        $create_logs = [
+            'fraud_scan' => $fraud_scan,
+            'ip_address' => MyHelper::getIp(),
+            'browser' => json_encode(MyHelper::getBrowser()),
+            'class' => $class_name,
+            'method' => $method_name,
+            'event' => $request->method(),
+            'is_active' => 1,
+            'created_by' => $user_id,
+            'created_date' => date('Y-m-d H:i:s'),
+            'updated_by' => $user_id,
+            'updated_date' => date('Y-m-d H:i:s'),
+        ];
+        Tbl_logs::do_insert($create_logs);
     }
 
 }

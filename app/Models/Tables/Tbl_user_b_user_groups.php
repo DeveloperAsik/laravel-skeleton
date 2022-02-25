@@ -18,7 +18,7 @@ use App\MY_Model;
 class Tbl_user_b_user_groups extends MY_Model {
 
     //put your code here  
-    protected $table_name = 'tbl_user_b_user_groups';
+    public static $table_name = "tbl_user_b_user_groups";
 
     public function __construct() {
         parent::__construct();

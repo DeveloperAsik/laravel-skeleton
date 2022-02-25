@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tables\Tbl_user_a_modules;
+use App\Models\Tables\Tbl_e_icons;
 
 /**
  * Description of MenuController
@@ -46,8 +47,9 @@ class MenuController extends Controller {
                 'path' => config('app.base_extraweb_uri') . '/menu/create'
             ]
         ];
-        $modules = Tbl_user_a_modules::fnGetModules($request);
-        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'modules'));
+        $modules = Tbl_user_a_modules::get_all($request);
+        $icons = Tbl_e_icons::get_all($request);
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'modules','icons'));
     }
 
     public function view(Request $request) {

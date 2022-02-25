@@ -60,6 +60,11 @@
 @else
     var _env = '';
 @endif
+@if(config("app.base_json_uri"))
+    var _path_json = '{{config("app.base_json_uri")}}';
+@else
+    var _path_json = '';
+@endif
 </script>
 
 <!-- load system variable to js function start here -->

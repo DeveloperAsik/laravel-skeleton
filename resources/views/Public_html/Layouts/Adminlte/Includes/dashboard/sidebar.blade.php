@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{config('app.base_extraweb_uri') .'/user/profile'}}" class="brand-link">
+    <a href="{{config('app.base_extraweb_uri') .'/dashboard'}}" class="brand-link">
         <img src="{{config('app.base_assets_uri')}}/images/logo-orenocms.png" alt="OrenoCMS-Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Extraweb OrenoCMS</span>
+        <span class="brand-text font-weight-light">Extraweb CMS</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -12,7 +12,7 @@
                 <img src="{{config('app.base_assets_uri')}}/templates/adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="{{config('app.base_extraweb_uri') .'/user/profile'}}" class="d-block">{{($__user_name) ? $__user_name : '-'}}</a>
+                <a href="{{config('app.base_extraweb_uri') .'/profile/view'}}" class="d-block">{{isset($__user_name) ? $__user_name : '-'}}</a>
             </div>
         </div>
         <!-- Sidebar Menu -->
@@ -91,6 +91,26 @@
                                                                                     @endif
                                                                                 </p>
                                                                             </a>
+                                                                            @if(isset($val4->child) && !empty($val4->child))
+                                                                                @foreach($val4->child AS $key5 => $val5)
+                                                                                    <ul class="nav nav-treeview">
+                                                                                        <li class="nav-item">
+                                                                                            <a href="{{config('app.base_extraweb_uri') . $val5->path}}" class="nav-link" style="width:84%;margin-left:45px;">
+                                                                                                {!! (isset($val5->icon) ? $val5->icon : '<i class="nav-icon fas fa-th"></i>') !!}
+                                                                                                <p>
+                                                                                                    {{$val5->title}}
+                                                                                                    @if(isset($val5->child) && !empty($val5->child))
+                                                                                                        <i class="fas fa-angle-left right"></i>
+                                                                                                    @endif
+                                                                                                    @if(isset($val5->is_badge) && $val5->is_badge )
+                                                                                                        <span class="{{$val5->badge}}"{{($val5->badge_id) ? ' id="'.$val5->badge_id.'"' : ''}}>{{$val5->badge_value}}</span>
+                                                                                                    @endif
+                                                                                                </p>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                @endforeach
+                                                                            @endif
                                                                         </li>
                                                                     </ul>
                                                                 @endforeach

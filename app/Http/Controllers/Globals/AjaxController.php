@@ -10,10 +10,11 @@ namespace App\Http\Controllers\Globals;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Helpers\MyHelper;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\MyHelper;
 use App\Http\Middleware\TokenUser;
 use App\Models\Tables\Tbl_user_c_sidebars;
+use App\Models\Tables\Tbl_logs;
 
 /**
  * Description of AjaxController
@@ -32,11 +33,28 @@ class AjaxController extends Controller {
             case "get-menu":
                 $response = $this->fn_get_menu($request);
                 break;
+            case "get-menu-by-level":
+                $response = $this->fn_get_menu_by_level($request);
+                break;
             case "get-menu-single":
                 $response = $this->fn_get_menu_single($request);
                 break;
+            case "get-menu-child":
+                $response = $this->fn_get_menu_child($request);
+                break;
+            case "get-logs":
+                $response = $this->fn_get_logs($request);
+                break;
         }
         return $response;
+    }
+
+    protected function fn_get_logs($request) {
+        if (isset($request) && !empty($request)) {
+            return Tbl_logs::get_list($request);
+        } else {
+            return null;
+        }
     }
 
     protected function fn_get_permission($request) {
@@ -50,6 +68,44 @@ class AjaxController extends Controller {
             $menu = Tbl_user_c_sidebars::get_menu_by_id($request->id, 1, 0);
         }
         return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully fetching menu data.', 'valid' => true, 'data' => $menu]);
+    }
+
+    protected function fn_get_menu_child($request) {
+        $menu = [];
+        if ($request->parent_id) {
+            $menu = Tbl_user_c_sidebars::get_menu_by_parent_id($request->module_id, $request->level, $request->parent_id);
+        }
+        $strMenu = '';
+        $strMenu .= '<div class="form-group row"><label class="col-sm-2 control-label">Menu Parent level ' . $request->level . '</label>
+                        <select class="form-control col-sm-9" id="menu' . $request->level . '" name="menu' . $request->level . '" data-level="' . $request->level . '" style="width: 100%; margin-left:8px" onchange="fnSelectMenu(' . $request->parent_id . ',' . $request->level . ',' . $request->module_id . ')">';
+        $strMenu .= '<option value="0">-- select one --</option>';
+        foreach ($menu AS $key => $value) {
+            $strMenu .= '<option value="' . $value->id . '">Title : ' . $value->title . ' | ID : ' . $value->id . ', Parent ID | ' . $value->parent_id . '</option>';
+        }
+        $strMenu .= '</select></div>';
+        return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully fetching menu data.', 'valid' => true, 'data' => $menu]);
+    }
+
+    protected function fn_get_menu_by_level($request) {
+        $menu = [];
+        if ($request->level) {
+            for ($i = 1; $i < $request->level; $i++) {
+                $menu[] = Tbl_user_c_sidebars::get_menu_by_level($i, $request->module_id);
+            }
+            $strMenu = '';
+            if (isset($menu) && !empty($menu)) {
+                $k = 0;
+                $j = 1;
+                $strMenu .= '<div class="form-group row"><label class="col-sm-2 control-label">Menu Parent level ' . $j . '</label>
+                                <select class="form-control col-sm-9" id="menu' . $j . '" name="menu' . $j . '" data-level="' . $j . '" style="width: 100%; margin-left:8px" onchange="fnSelectMenu(this, ' . $i . ',' . $request->module_id . ')">';
+                $strMenu .= '<option value="0">-- select one --</option>';
+                foreach ($menu[$k] AS $key => $value) {
+                    $strMenu .= '<option value="' . $value->id . '">Title : ' . $value->title . ' | ID : ' . $value->id . ', Parent ID | ' . $value->parent_id . '</option>';
+                }
+                $strMenu .= '</select></div>';
+            }
+        }
+        return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully fetching menu data.', 'valid' => true, 'data' => $strMenu]);
     }
 
     protected function fn_get_menu($request) {
@@ -70,11 +126,24 @@ class AjaxController extends Controller {
                                     $arr_menu_4 = [];
                                     if ($menu_4) {
                                         foreach ($menu_4 AS $k => $v) {
+                                            $menu_5 = Tbl_user_c_sidebars::get_menus($request->module_id, ($v->level + 1), $v->id);
+                                            $arr_menu_5 = [];
+                                            if ($menu_5) {
+                                                foreach ($menu_5 AS $j => $w) {
+                                                    $arr_menu_5[] = [
+                                                        "id" => $w->id,
+                                                        "parent" => $w->parent_id,
+                                                        "text" => '<button type="button" style="background-color: transparent;border: none;" data-toggle="modal" data-target="#modal_edit_node" data-level="4"  data-id="' . $w->id . '">' . $w->title . '</button>',
+                                                        "icon" => $w->icon
+                                                    ];
+                                                }
+                                            }
                                             $arr_menu_4[] = [
                                                 "id" => $v->id,
                                                 "parent" => $v->parent_id,
                                                 "text" => '<button type="button" style="background-color: transparent;border: none;" data-toggle="modal" data-target="#modal_edit_node" data-level="4"  data-id="' . $v->id . '">' . $v->title . '</button>',
-                                                "icon" => $v->icon
+                                                "icon" => $v->icon,
+                                                "children" => $arr_menu_5
                                             ];
                                         }
                                     }
@@ -129,7 +198,7 @@ class AjaxController extends Controller {
             case "update-menu":
                 $response = $this->fn_post_update_menu($request);
                 break;
-            case "get-group-permission-list":
+            case "post-group-permission-list":
                 $response = $this->fn_post_get_group_permission_list($request);
                 break;
             case "get-user-list":
@@ -144,11 +213,44 @@ class AjaxController extends Controller {
             case "get-group-permission-list":
                 $response = $this->fn_get_group_permission_list($request);
                 break;
+            case "get-classess-list":
+                $response = $this->fn_get_classes_list($request);
+                break;
+            case "group_permission_update":
+                $response = $this->fn_post_group_permission_update($request);
+                break;
         }
         return $response;
     }
 
-    protected function fn_get_group_permission_list(Request $request) {
+    protected function fn_post_group_permission_update($request) {
+        $data = $request->json()->all();
+        if (isset($data) && !empty($data)) {
+            if (isset($data['is_public'])) {
+                $dupdate = isset($data['is_public']) ? (int) $data['is_public'] : 0;
+                $dstring = 'is_public';
+            } elseif (isset($data['is_allowed'])) {
+                $dupdate = isset($data['is_allowed']) ? (int) $data['is_allowed'] : 0;
+                $dstring = 'is_allowed';
+            } elseif (isset($data['is_active'])) {
+                $dupdate = isset($data['is_active']) ? (int) $data['is_active'] : 0;
+                $dstring = 'is_active';
+            }
+            $param = [
+                $dstring => $dupdate,
+                'updated_by' => $this->__user_id,
+                'updated_date' => date('Y-m-d H:i:s'),
+            ];
+            $response = DB::table('tbl_user_d_group_permissions')->where('id', '=', (int) $data['id'])->update($param);
+            if ($response) {
+                return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully group permission.', 'valid' => true]);
+            } else {
+                return MyHelper::_set_response('json', ['code' => 200, 'message' => 'failed update  group permission.', 'valid' => false]);
+            }
+        }
+    }
+
+    protected function fn_get_group_permission_list($request) {
         if (isset($request) && !empty($request)) {
             $draw = $request['draw'];
             $limit = ($request->length) ? $request->length : 10;
@@ -156,9 +258,10 @@ class AjaxController extends Controller {
             $search = $request['search']['value'];
             if (isset($search) && !empty($search)) {
                 $data = DB::table('tbl_user_d_group_permissions AS a')
-                        ->select('a.*', 'b.id permission_id', 'b.route_name', 'b.url', 'b.class', 'b.method', 'b.is_allowed as permission_is_allowed', 'b.is_active as permission_is_active', 'c.id as group_id', 'c.name as group_name')
+                        ->select('a.*', 'b.id AS permission_id', 'b.route_name', 'b.url', 'b.class', 'b.method', 'b.module_id', 'b.is_active AS permission_is_active', 'c.id AS group_id', 'c.name AS group_name', 'd.name AS module_name')
                         ->leftJoin('tbl_user_d_permissions AS b', 'b.id', '=', 'a.permission_id')
-                        ->leftJoin('tbl_user_a_groups AS d', 'd.id', '=', 'a.group_id')
+                        ->leftJoin('tbl_user_a_groups AS c', 'c.id', '=', 'a.group_id')
+                        ->leftJoin('tbl_user_a_modules AS d', 'd.id', '=', 'b.module_id')
                         ->where('b.route_name', 'like', '%' . $search . '%')
                         ->orWhere('b.url', 'like', '%' . $search . '%')
                         ->orWhere('b.class', 'like', '%' . $search . '%')
@@ -169,9 +272,10 @@ class AjaxController extends Controller {
                         ->get();
             } else {
                 $data = DB::table('tbl_user_d_group_permissions AS a')
-                        ->select('a.*', 'b.id permission_id', 'b.route_name', 'b.url', 'b.class', 'b.method', 'b.is_allowed as permission_is_allowed', 'b.is_active as permission_is_active', 'c.id as group_id', 'c.name as group_name')
+                        ->select('a.*', 'b.id AS permission_id', 'b.route_name', 'b.url', 'b.class', 'b.method', 'b.module_id', 'b.is_active AS permission_is_active', 'c.id AS group_id', 'c.name AS group_name', 'd.name AS module_name')
                         ->leftJoin('tbl_user_d_permissions AS b', 'b.id', '=', 'a.permission_id')
-                        ->leftJoin('tbl_user_a_groups AS d', 'd.id', '=', 'a.group_id')
+                        ->leftJoin('tbl_user_a_groups AS c', 'c.id', '=', 'a.group_id')
+                        ->leftJoin('tbl_user_a_modules AS d', 'd.id', '=', 'b.module_id')
                         ->orderBy('a.id', 'ASC')
                         ->offset($offset)
                         ->limit($limit)
@@ -181,27 +285,91 @@ class AjaxController extends Controller {
             if (isset($data) && !empty($data)) {
                 $arr = array();
                 foreach ($data AS $keyword => $value) {
+                    $is_public = '';
+                    $is_public_value = 0;
+                    if ($value->is_public == 1) {
+                        $is_public = ' checked';
+                        $is_public_value = 1;
+                    }
                     $is_allowed = '';
+                    $is_allowed_value = 0;
                     if ($value->is_allowed == 1) {
                         $is_allowed = ' checked';
+                        $is_allowed_value = 1;
                     }
                     $is_active = '';
+                    $is_active_value = 0;
                     if ($value->is_active == 1) {
                         $is_active = ' checked';
+                        $is_active_value = 1;
                     }
                     $arr[] = [
                         'id' => $value->id,
-                        'route_name' => $value->url,
-                        'url' => $value->module_name,
-                        'class' => $value->route,
+                        'route_name' => $value->route_name,
+                        'url' => $value->url,
+                        'class' => $value->class,
                         'method' => $value->method,
-                        'is_allowed' => $is_allowed,
-                        'is_active' => $is_active,
-                        'action' => '<div class="btn-group">
-                        <button type="button" class="btn btn-info"><a href="' . config('app.base_extraweb_uri') . '/profile/hook/off/' . base64_encode($value->id) . '" style="color:#fff;font-size:14px;" title="Remove from group access"><i class="far fa-trash-alt"></i></a></button>
-                        <button type="button" class="btn btn-info"><a href="' . config('app.base_extraweb_uri') . '/profile/hook/on/' . base64_encode($value->id) . '" style="color:#fff;font-size:14px;" title="Add for group access"><i class="fas fa-plus-circle"></i></a></button>
-                        <button type="button" class="btn btn-info"><a href="' . config('app.base_extraweb_uri') . '/permission/edit/' . base64_encode($value->id) . '" style="color:#fff;font-size:14px;" title="Edit group access"><i class="fas fa-edit"></i></a></button>
-                      </div>',
+                        'module' => $value->module_name,
+                        'group' => $value->group_name,
+                        'is_public' => '<input type="checkbox"' . $is_public . ' value="' . $is_public_value . '" name="is_public" class="make-switch" data-size="small" data-id="' . $value->id . '">',
+                        'is_allowed' => '<input type="checkbox"' . $is_allowed . ' value="' . $is_allowed_value . '" name="is_allowed" class="make-switch" data-size="small" data-id="' . $value->id . '">',
+                        'is_active' => '<input type="checkbox"' . $is_active . ' value="' . $is_active_value . '" name="is_active" class="make-switch" data-size="small" data-id="' . $value->id . '">',
+                    ];
+                }
+                $output = array(
+                    'draw' => $draw,
+                    'recordsTotal' => $total_rows,
+                    'recordsFiltered' => $total_rows,
+                    'data' => $arr,
+                );
+                echo json_encode($output);
+            } else {
+                echo json_encode(array());
+            }
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    protected function fn_get_classes_list($param) {
+        if (isset($request) && !empty($request)) {
+            $draw = $request['draw'];
+            $limit = ($request->length) ? $request->length : 10;
+            $offset = ($request->start) ? $request->start : 0;
+            $search = $request['search']['value'];
+            if (isset($search) && !empty($search)) {
+                $data = DB::table('tbl_user_a_classes')
+                        ->where('namespace', 'like', '%' . $search . '%')
+                        ->orWhere('class', 'like', '%' . $search . '%')
+                        ->orWhere('method', 'like', '%' . $search . '%')
+                        ->orderBy('a.id', 'ASC')
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+            } else {
+                $data = DB::table('tbl_user_a_classes AS a')
+                        ->orderBy('a.id', 'ASC')
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+            }
+            $total_rows = DB::table('tbl_user_a_classes AS a')->count();
+            if (isset($data) && !empty($data)) {
+                $arr = array();
+                foreach ($data AS $keyword => $value) {
+                    $is_active = '';
+                    $is_active_value = 0;
+                    if ($value->is_active == 1) {
+                        $is_active = ' checked';
+                        $is_active_value = 1;
+                    }
+                    $arr[] = [
+                        'id' => $value->id,
+                        'namespace' => $value->route_name,
+                        'class' => $value->class,
+                        'method' => $value->method,
+                        'group' => $value->group_name,
+                        'is_active' => '<input type="checkbox"' . $is_active . ' value="' . $is_active_value . '" name="is_active" class="make-switch" data-size="small" data-id="' . $value->id . '">',
                     ];
                 }
                 $output = array(
@@ -447,17 +615,23 @@ class AjaxController extends Controller {
                 ];
                 $response = DB::table('tbl_user_c_sidebars')->insert($param);
             } else {
+                $title = '';
+                if (isset($data['value'])) {
+                    $title = $data['value'];
+                } elseif (isset($data['title'])) {
+                    $title = $data['title'];
+                }
                 $param = [
-                    'title' => (string) $data['title'],
-                    'icon' => $data['icon'],
-                    'path' => $data['path'],
-                    'level' => (int) $data['level'],
-                    'rank' => (int) $data['rank'],
-                    'parent_id' => (int) $data['parent'],
+                    'title' => isset($title) ? (string) $title : '',
+                    'icon' => isset($data['icon']) ? $data['icon'] : '',
+                    'path' => isset($data['path']) ? $data['path'] : '',
+                    'level' => isset($data['level']) ? (int) $data['level'] : 1,
+                    'rank' => isset($data['rank']) ? (int) $data['rank'] : 1,
+                    'parent_id' => isset($data['parent']) ? (int) $data['parent'] : 0,
                     'group_id' => $this->__group_id,
-                    'is_badge' => (int) $data['is_badge'],
-                    'is_open' => (int) $data['is_open'],
-                    'is_active' => (int) $data['is_active'],
+                    'is_badge' => isset($data['is_badge']) ? (int) $data['is_badge'] : 0,
+                    'is_open' => isset($data['is_open']) ? (int) $data['is_open'] : 0,
+                    'is_active' => isset($data['is_active']) ? (int) $data['is_active'] : 0,
                     'updated_by' => $this->__user_id,
                     'updated_date' => date('Y-m-d H:i:s'),
                 ];
@@ -466,7 +640,7 @@ class AjaxController extends Controller {
             if ($response) {
                 return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update menu.', 'valid' => true]);
             } else {
-                return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update menu.', 'valid' => false]);
+                return MyHelper::_set_response('json', ['code' => 200, 'message' => 'failed update menu.', 'valid' => false]);
             }
         }
     }
@@ -576,18 +750,39 @@ class AjaxController extends Controller {
     protected function fn_post_update_form_prefferences($request) {
         $data = $request->json()->all();
         if (isset($data) && !empty($data)) {
-            $token_exist = DB::table('tbl_user_c_tokens AS a')->select('a.id', 'a.profile_id', 'a.group_id', 'a.user_id')->where('a.user_id', '=', $this->__user_id)->first();
-            $param_update_profile = [
-                'facebook' => ($data['facebook']) ? (string) $data['facebook'] : '',
-                'twitter' => ($data['twitter']) ? (string) $data['twitter'] : '',
-                'instagram' => ($data['instagram']) ? (string) $data['instagram'] : '',
-                'linkedin' => ($data['linkedin']) ? (string) $data['linkedin'] : '',
-                'last_education' => ($data['last_education']) ? (string) $data['last_education'] : '',
-                'last_education_institution' => ($data['last_education_institution']) ? (string) $data['last_education_institution'] : '',
-                'skill' => ($data['skill']) ? (string) $data['skill'] : '',
-                'notes' => ($data['notes']) ? (string) $data['notes'] : ''
-            ];
-            DB::table('tbl_user_a_profiles')->where('id', $token_exist->profile_id)->update($param_update_profile);
+            $users = DB::table('tbl_user_a_users AS a')->select('a.id', 'a.profile_id')->where('a.id', '=', $this->__user_id)->first();
+            if ($users->profile_id != 0) {
+                $param_update_profile = [
+                    'facebook' => ($data['facebook']) ? (string) $data['facebook'] : '',
+                    'twitter' => ($data['twitter']) ? (string) $data['twitter'] : '',
+                    'instagram' => ($data['instagram']) ? (string) $data['instagram'] : '',
+                    'linkedin' => ($data['linkedin']) ? (string) $data['linkedin'] : '',
+                    'last_education' => ($data['last_education']) ? (string) $data['last_education'] : '',
+                    'last_education_institution' => ($data['last_education_institution']) ? (string) $data['last_education_institution'] : '',
+                    'skill' => ($data['skill']) ? (string) $data['skill'] : '',
+                    'notes' => ($data['notes']) ? (string) $data['notes'] : '',
+                    'updated_by' => $this->__user_id,
+                    'updated_date' => date('Y-m-d H:i:s')
+                ];
+                DB::table('tbl_user_a_profiles')->where('id', $users->profile_id)->update($param_update_profile);
+            } else {
+                $param_update_profile = [
+                    'facebook' => ($data['facebook']) ? (string) $data['facebook'] : '',
+                    'twitter' => ($data['twitter']) ? (string) $data['twitter'] : '',
+                    'instagram' => ($data['instagram']) ? (string) $data['instagram'] : '',
+                    'linkedin' => ($data['linkedin']) ? (string) $data['linkedin'] : '',
+                    'last_education' => ($data['last_education']) ? (string) $data['last_education'] : '',
+                    'last_education_institution' => ($data['last_education_institution']) ? (string) $data['last_education_institution'] : '',
+                    'skill' => ($data['skill']) ? (string) $data['skill'] : '',
+                    'notes' => ($data['notes']) ? (string) $data['notes'] : '',
+                    'created_by' => $this->__user_id,
+                    'created_date' => date('Y-m-d H:i:s'),
+                    'updated_by' => $this->__user_id,
+                    'updated_date' => date('Y-m-d H:i:s')
+                ];
+                $profileID = DB::table('tbl_user_a_profiles')->insertGetId($param_update_profile);
+                DB::table('tbl_user_a_users')->where('id', $users->id)->update(['profile_id' => $profileID]);
+            }
             return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update user profile.', 'valid' => true]);
         }
     }
@@ -595,28 +790,28 @@ class AjaxController extends Controller {
     protected function fn_post_add_group_permission($request) {
         $data = $request->json()->all();
         if (isset($data) && !empty($data)) {
-            $permissions = DB::table('tbl_user_a_permissions')
+            $permissions = DB::table('tbl_user_d_permissions')
                     ->where('url', '=', $data['url'])
-                    ->where('route', '=', $data['route'])
+                    ->where('route_name', '=', $data['route_name'])
                     ->where('class', '=', $data['class'])
                     ->where('method', '=', $data['method'])
                     ->where('module_id', '=', $data['module'])
                     ->first();
             if ($permissions == '' || empty($permissions) || $permissions == null) {
                 $params = [
+                    'route_name' => ($data['route_name']) ? (string) $data['route_name'] : '',
                     'url' => ($data['url']) ? (string) $data['url'] : '',
-                    'route' => ($data['route']) ? (string) $data['route'] : '',
                     'class' => ($data['class']) ? (string) $data['class'] : '',
                     'method' => ($data['method']) ? (string) $data['method'] : '',
-                    'description' => '-',
+                    'description' => isset($data['description']) ? (string) $data['description'] : '-',
                     'module_id' => ($data['module']) ? (int) $data['module'] : '',
-                    'is_generated_view' => ($data['is_generated_view'] == false) ? 1 : 0,
                     'is_active' => 1,
                     'created_by' => $this->__user_id,
                     'created_date' => date('Y-m-d H:i:s'),
+                    'updated_by' => $this->__user_id,
                     'updated_date' => date('Y-m-d H:i:s'),
                 ];
-                $result = DB::table('tbl_user_a_permissions')->insertGetId($params);
+                $result = DB::table('tbl_user_d_permissions')->insertGetId($params);
                 if ($result) {
                     $group_permissions = DB::table('tbl_user_d_group_permissions AS a')->where('a.permission_id', '=', $result)->where('a.group_id', '=', $this->__group_id)->first();
                     if ($group_permissions == '' || empty($group_permissions) || $group_permissions == null) {
@@ -638,6 +833,7 @@ class AjaxController extends Controller {
                     return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update user profile.', 'valid' => true]);
                 }
             } else {
+
                 return MyHelper::_set_response('json', ['code' => 500, 'message' => 'Failed insert new permission data exist.', 'valid' => false]);
             }
         }

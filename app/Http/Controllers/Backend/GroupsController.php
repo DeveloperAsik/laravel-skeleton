@@ -46,7 +46,7 @@ class GroupsController extends Controller {
                 'path' => config('app.base_extraweb_uri') . '/permission/create'
             ]
         ];
-        $modules = Tbl_user_a_modules::fnGetModules($request);
+        $modules = Tbl_user_a_modules::get_all($request);
         return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'modules'));
     }
 

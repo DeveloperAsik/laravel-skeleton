@@ -19,14 +19,14 @@ use Illuminate\Support\Facades\DB;
 class Tbl_user_d_permissions extends MY_Model {
 
     //put your code here  
-    public $table_name;
+    public static $table_name = "tbl_user_d_permissions";
 
     public function __construct() {
-        $this->table_name = 'tbl_user_d_permissions';
+        parent::__construct();
     }
 
     public function getCurrentPermission($request, $path) {
-        $permissionExist = DB::table($this->table_name)->where('url', '=', $path);
+        $permissionExist = DB::table(self::$table_name)->where('url', '=', $path);
         $permissionExistTotal = $permissionExist->count();
         if ($permissionExistTotal && $permissionExistTotal == 1) {
             $permissionExistGet = $permissionExist->select('id', 'route_name', 'url', 'class', 'method', 'module_id', 'is_active')->first();

@@ -55,7 +55,6 @@ class TokenUser {
                     'token' => $token,
                     'token_refreshed' => $token_refresh,
                     'expiry_date' => date('Y-m-d H:i:s', strtotime('+24 Hours')),
-                    'profile_id' => 0,
                     'is_active' => 1,
                     'is_logged_in' => 1,
                     'group_id' => $group->group_id,

@@ -38,6 +38,22 @@
                         {"data": "action"}
                     ]
                 });
+                $('#users').on('click', 'input[type="checkbox"][name="is_active"]', function () {
+                    var checked = this.checked;
+                    var id = $(this).attr('data-id');
+                    var uri = _base_extraweb_uri + '/user/update/' + id;
+                    var type = 'POST';
+                    var formdata = {
+                        action: 'is_active',
+                        is_active: (checked == true) ? 1 : 0
+                    };
+                    var response = fnAjaxSend(JSON.stringify(formdata), uri, type, {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, false);
+                    if (response.responseJSON.status.code == 200) {
+                        fnAlertStr(response.responseJSON.status.message, 'success', {timeOut: 2000});
+                    } else {
+                        fnAlertStr(response.responseJSON.status.message, 'error', {timeOut: 2000});
+                    }
+                });
             }
         };
     }();

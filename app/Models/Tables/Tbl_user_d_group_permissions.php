@@ -19,15 +19,14 @@ use Illuminate\Support\Facades\DB;
 class Tbl_user_d_group_permissions extends MY_Model {
 
     //put your code here
-    //put your code here  
-    public $table_name;
+    public static $table_name = "tbl_user_d_group_permissions";
 
     public function __construct() {
-        $this->table_name = 'tbl_user_d_group_permissions';
+        parent::__construct();
     }
 
     public function getCurrentGroup($request, $data) {
-        $permissionExist = DB::table($this->table_name)->where([
+        $permissionExist = DB::table(self::$table_name)->where([
             ['permission_id', '=', $data->id],
             ['is_active', '=', 1]
         ]);

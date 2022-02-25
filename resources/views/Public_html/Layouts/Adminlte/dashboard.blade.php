@@ -7,6 +7,7 @@
         @include('Public_html.Layouts.Adminlte.Includes.dashboard.include_css')
     </head>
     <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="img-loading" style="position: fixed; top:40%; left:45%; width:120px; z-index:9999"></div>
         <div class="wrapper">
             <!-- Navbar -->
             @include('Public_html.Layouts.Adminlte.Includes.dashboard.navbar')
@@ -34,6 +35,7 @@
             </aside>
             <!-- /.control-sidebar -->
         </div>
+        @include('Public_html.Components.modal')
         <!-- ./wrapper -->
         @include('Public_html.Layouts.Adminlte.Includes.dashboard.include_js')
     </body>

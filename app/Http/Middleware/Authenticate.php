@@ -10,6 +10,7 @@ use App\Http\Middleware\TokenUser;
 use App\Models\Tables\Tbl_user_d_permissions;
 use App\Models\Tables\Tbl_user_d_group_permissions;
 use App\Models\Tables\Tbl_user_a_modules;
+
 use Closure;
 
 class Authenticate {
@@ -22,6 +23,7 @@ class Authenticate {
         $this->Tbl_user_d_permissions = $Tbl_user_d_permissions;
         $this->Tbl_user_d_group_permissions = $Tbl_user_d_group_permissions;
         $this->Tbl_user_a_modules = $Tbl_user_a_modules;
+        
     }
 
     /**
@@ -48,22 +50,9 @@ class Authenticate {
             } else {
                 session(['_session_destination_path' => '/' . $currentPath]);
                 session()->save();
-                return redirect($authAccessServices['url'])->with(['warning-msg' => 'This page need login session, please login first!']);
+                return redirect('/extraweb/login')->with(['warning-msg' => 'This page need login session, please login first!']);
             }
         }
-        //$token = $request->header('Authorization');
-        //if (isset($token) && !empty($token)) {
-        //    $response = MyHelper::is_jwt_valid($token);
-        //    if ($response) {
-        //        return $next($request);
-        //    } else {
-        //        $response_data = array('status' => 401, 'message' => 'Your token is not valid or expired, please re-login or contact administrator', 'data' => array('valid' => false));
-        //        return response()->json($response_data, 401);
-        //    }
-        //} else {
-        //    $response_data = array('status' => 401, 'message' => 'Cannot found your token, please re-login or contact administrator', 'data' => array('valid' => false));
-        //    return response()->json($response_data, 401);
-        //}
     }
 
     protected function initServices($request, $currentPath) {

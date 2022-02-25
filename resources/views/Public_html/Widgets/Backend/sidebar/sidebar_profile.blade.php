@@ -10,16 +10,16 @@
         <p class="text-muted text-center">{{($user->user_profile->email) ? $user->user_profile->email : ''}}</p>
         <ul class="list-group list-group-unbordered mb-3">
             <li class="list-group-item">
-                <b>Facebook</b> <a class="float-right">{{($user->user_profile->facebook) ? $user->user_profile->facebook : ''}}</a>
+                <b>FB</b> <a class="float-right">{{($user->user_profile->facebook) ? $user->user_profile->facebook : ''}}</a>
             </li>
             <li class="list-group-item">
-                <b>Twitter</b> <a class="float-right">{{($user->user_profile->twitter) ? $user->user_profile->twitter : ''}}</a>
+                <b>Twit</b> <a class="float-right">{{($user->user_profile->twitter) ? $user->user_profile->twitter : ''}}</a>
             </li>
             <li class="list-group-item">
-                <b>Instagram</b> <a class="float-right">{{($user->user_profile->instagram) ? $user->user_profile->instagram : ''}}</a>
+                <b>Ins</b> <a class="float-right">{{($user->user_profile->instagram) ? $user->user_profile->instagram : ''}}</a>
             </li>
             <li class="list-group-item">
-                <b>Linkedin</b> <a class="float-right">{{($user->user_profile->linkedin) ? $user->user_profile->linkedin : ''}}</a>
+                <b>Link</b> <a class="float-right">{{($user->user_profile->linkedin) ? $user->user_profile->linkedin : ''}}</a>
             </li>
         </ul>
         <a href="{{config('app.base_extraweb_uri'). '/profile/update'}}" class="btn btn-primary btn-block"><b>update profile</b></a>

@@ -4,23 +4,26 @@ $base_api_url = '';
 $base_static_url = '';
 $base_assets_url = '';
 $base_media_url = '';
+$base_json_uri = '';
 switch (env('APP_ENV')) {
     case 'local' :
         $base_assets_url = env('APP_URL_ASSETS_LOCAL');
         $base_static_url = env('APP_URL_STATIC_LOCAL');
         $base_media_url = env('APP_URL_MEDIA_LOCAL');
         $base_api_url = env('APP_URL_API_LOCAL');
+        $base_json_uri = env('APP_URL_JSON_LOCAL');
         break;
     case 'dev' :
         $base_assets_url = env('APP_URL_ASSETS_DEV');
         $base_static_url = env('APP_URL_STATIC_DEV');
         $base_media_url = env('APP_URL_MEDIA_DEV');
         $base_api_url = env('APP_URL_API_DEV');
+        $base_json_uri = env('APP_URL_JSON_DEV');
         break;
 }
 return [
     'default_variables' => [
-        'title_for_layout' => "Welcome to orenoCMS, simple ecommerce great amazing profit"
+        'title_for_layout' => "Welcome to Laravel Skeleton project, simple cms for great amazing profit."
     ],
 
     'name' => env('APP_NAME', 'Laravel'),
@@ -35,6 +38,7 @@ return [
     'base_static_uri' => $base_static_url,
     'base_media_uri' => $base_media_url,
     'base_assets_uri' =>$base_assets_url,
+    'base_json_uri' => $base_json_uri,
     
     'salt' => 'c1isvFdxMDdmjOlvxpecFwdawdwq3221dsad3ewda',
  

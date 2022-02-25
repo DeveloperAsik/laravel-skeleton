@@ -67,7 +67,7 @@ class GroupsPermissionsController extends Controller {
                 'path' => config('app.base_extraweb_uri') . '/group_permission/edit/' . $id
             ]
         ];
-        $modules = Tbl_user_a_permissions::fnGetModules($request);
+        $modules = Tbl_user_a_permissions::get_all($request);
         return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumb', 'modules'));
     }
 

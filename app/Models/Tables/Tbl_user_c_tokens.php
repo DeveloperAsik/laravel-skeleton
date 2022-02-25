@@ -18,7 +18,7 @@ use App\MY_Model;
 class Tbl_user_c_tokens extends MY_Model {
 
     //put your code here  
-    protected $table_name = 'tbl_user_c_tokens';
+    public static $table_name = "tbl_user_c_tokens";
 
     public function __construct() {
         parent::__construct();

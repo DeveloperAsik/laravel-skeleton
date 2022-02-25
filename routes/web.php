@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function ($e) {
      * 
      */
     Route::group(['prefix' => 'extraweb'], function($e) {
+        Route::get('/', 'App\Http\Controllers\Backend\AuthController@login')->name('extraweb.login');
         Route::get('/login', 'App\Http\Controllers\Backend\AuthController@login')->name('extraweb.login');
         Route::get('/logout', 'App\Http\Controllers\Backend\AuthController@logout')->name('extraweb.logout');
         Route::post('/validate-user', function (Request $request) {
@@ -44,15 +45,15 @@ Route::middleware(['auth'])->group(function ($e) {
             return Authenticate::save_token($request->all());
         })->name('extraweb.save_token');
         Route::get('/dashboard', 'App\Http\Controllers\Backend\DashboardController@index')->name('extraweb.dashboard');
-        
+
         Route::prefix('ajax')->group(function () {
             Route::get('/get/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_get')->name('extraweb.ajax_get');
             Route::post('/post/{method}', 'App\Http\Controllers\Globals\AjaxController@fn_ajax_post')->name('extraweb.ajax_post');
         });
-        
+
         Route::prefix('menu')->group(function () {
             Route::get('/view', 'App\Http\Controllers\Backend\MenuController@view')->name('extraweb.menu.view');
-             Route::get('/create', 'App\Http\Controllers\Backend\MenuController@create')->name('extraweb.menu.create');
+            Route::get('/create', 'App\Http\Controllers\Backend\MenuController@create')->name('extraweb.menu.create');
             Route::get('/tree_view', 'App\Http\Controllers\Backend\MenuController@tree_view')->name('extraweb.menu.tree_view');
             Route::post('/get_list', 'App\Http\Controllers\Backend\MenuController@get_list')->name('extraweb.menu.get_list');
             Route::get('/edit/{id}', 'App\Http\Controllers\Backend\MenuController@edit')->name('extraweb.menu.edit');
@@ -60,12 +61,21 @@ Route::middleware(['auth'])->group(function ($e) {
         });
 
         Route::prefix('profile')->group(function () {
-            Route::get('/', 'App\Http\Controllers\Backend\DashboardController@profile')->name('extraweb.profile');
-            Route::get('/update', 'App\Http\Controllers\Backend\DashboardController@profile_update')->name('extraweb.profile_update');
-            Route::post('/upload_photo', 'App\Http\Controllers\Backend\DashboardController@fnUploadPhoto')->name('extraweb.fnUploadPhoto');
+            Route::get('/view', 'App\Http\Controllers\Backend\ProfileController@view')->name('extraweb.profile');
+            Route::get('/update', 'App\Http\Controllers\Backend\ProfileController@update')->name('extraweb.profile_update');
+            Route::post('/upload_photo', 'App\Http\Controllers\Backend\ProfileController@fnUploadPhoto')->name('extraweb.fnUploadPhoto');
+        });
+        Route::prefix('classes')->group(function () {
+            Route::get('/view', 'App\Http\Controllers\Backend\ClassesController@view')->name('extraweb.classes.view');
+            Route::get('/create', 'App\Http\Controllers\Backend\ClassesController@create')->name('extraweb.classes.create');
+            Route::post('/get_list', 'App\Http\Controllers\Backend\ClassesController@get_list')->name('extraweb.classes.get_list');
+            Route::get('/edit/{id}', 'App\Http\Controllers\Backend\ClassesController@edit')->name('extraweb.classes.edit');
+            Route::post('/update/{id}', 'App\Http\Controllers\Backend\ClassesController@update')->name('extraweb.classes.update');
+            Route::post('/insert', 'App\Http\Controllers\Backend\ClassesController@insert')->name('extraweb.classes.insert');
         });
 
         Route::prefix('user')->group(function () {
+            Route::get('/create', 'App\Http\Controllers\Backend\UsersController@create')->name('extraweb.users.create');
             Route::get('/view', 'App\Http\Controllers\Backend\UsersController@view')->name('extraweb.users.view');
             Route::post('/get_list', 'App\Http\Controllers\Backend\UsersController@get_list')->name('extraweb.users.get_list');
             Route::get('/edit/{id}', 'App\Http\Controllers\Backend\UsersController@edit')->name('extraweb.users.edit');

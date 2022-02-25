@@ -1,31 +1,25 @@
+<!-- Select2 -->
+<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="{{config('app.base_assets_uri')}}/templates/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<style>
+    .select2-container {
+        box-sizing: border-box;
+        margin: 0px 0px 0px 6px;
+        position: relative;
+        width: 82% !important;
+    }
+</style>
 <section class="content">
     <div class="container-fluid">
         <!-- Info boxes -->
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Monthly Recap Report</h5>
-
+                        <h5 class="card-title">Create new menu</h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fas fa-wrench"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                    <a href="#" class="dropdown-item">Action</a>
-                                    <a href="#" class="dropdown-item">Another action</a>
-                                    <a href="#" class="dropdown-item">Something else here</a>
-                                    <a class="dropdown-divider"></a>
-                                    <a href="#" class="dropdown-item">Separated link</a>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
                             </button>
                         </div>
                     </div>
@@ -48,38 +42,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="module" class="col-sm-2 control-label">Icon</label>
-                                            <div class="col-sm-10">
-                                                <select class="form-control" id="module" name="module">
-                                                    <option value="0">-- select one --</option>
-                                                    @if(isset($icons) && !empty($icons))
-                                                        @foreach($icons AS $keyword => $value)
-                                                            <option value="{{$value->id}}">{{$value->name}}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
+                                            <label class="col-sm-2 control-label">Icon</label>
+                                            <select class="form-control select2 col-sm-10" id="icon" name="icon" style="width: 80%; padding-left:20px">
+                                                @if(isset($icons) && !empty($icons))
+                                                    @foreach($icons AS $keyword => $value)
+                                                        <option value="{{$value->class}}">{{$value->class}} <i class="{{$value->class}}"></i></option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                         </div>
                                         <div class="form-group row">
                                             <label for="level" class="col-sm-2 control-label">Level</label>
                                             <div class="col-sm-2">
                                                 <input type="number" min="1" max="5" name="level" class="form-control" id="level" placeholder="level">
-                                            </div>
-                                        </div>
-                                        <div id="levelID" style="display:none">
-                                            <div class="form-group row" id="selectParentValue">
-                                                <label for="select_parent" class="col-sm-2 control-label">Parent</label>
-                                                <div class="col-sm-10">
-                                                    <select class="form-control" id="select_parent" name="select_parent">
-                                                        <option value="0">-- select one --</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row" id="inputParentValue">
-                                                <label for="path" class="col-sm-2 control-label">Path</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" name="path" class="form-control" id="path" placeholder="path">
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -92,7 +67,7 @@
                                             <div class="form-group row">
                                                 <label for="badge" class="col-sm-2 control-label">Badge</label>
                                                 <div class="col-sm-10">
-                                                    <select class="form-control" id="module" name="badge">
+                                                    <select class="form-control" id="badge" name="badge">
                                                         <option value="0">-- select one --</option>
                                                         @if(isset($badges) && !empty($badges))
                                                             @foreach($badges AS $keyword => $value)
@@ -128,6 +103,8 @@
                                                 </select>
                                             </div>
                                         </div> 
+                                        <div id="levelID"></div>
+                                        <div id="levelChildID"></div>
                                         <div class="form-group row">
                                             <label for="level" class="col-sm-2 control-label">Is Open</label>
                                             <div class="col-sm-10">
@@ -144,7 +121,7 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" id="submit_form_add_permission" class="btn btn-info">Submit</button>
+                                        <button type="submit" id="submit_form_add_menu" class="btn btn-info">Submit</button>
                                     </div>
                                     <!-- /.card-footer -->
                                 </form>

@@ -19,23 +19,26 @@ use Illuminate\Support\Facades\DB;
 class Tbl_user_c_sidebars extends MY_Model {
 
     //put your code here  
-    protected $table_name = 'tbl_user_c_sidebars';
+    public static $table_name = "tbl_user_c_sidebars";
+
+    public function __construct() {
+        parent::__construct();
+    }
 
     public function scopeIsOpen($request) {
         $request->where('is_Open', 1);
     }
 
     public static function get_sidebar_menu($request, $__group_id) {
-        //$extraweb_sidebars = DB::table('tbl_user_c_sidebars')->selectRaw('count(level) as total_data, level')->groupBy('level')->get();
         $menu = [];
-        $menu_exist_1 = DB::table('tbl_user_c_sidebars AS a')
+        $menu_exist_1 = DB::table(self::$table_name . ' AS a')
                 ->select('a.id', 'a.title', 'a.path', 'a.icon', 'a.level', 'a.is_badge', 'a.badge', 'a.badge_id', 'a.badge_value', 'a.parent_id', 'a.group_id')
                 ->where('a.level', '=', 1)
                 ->where('a.group_id', '=', $__group_id)
                 ->get();
         if (isset($menu_exist_1) && !empty($menu_exist_1)) {
             foreach ($menu_exist_1 AS $keyword => $value) {
-                $menu_exist_2 = DB::table('tbl_user_c_sidebars AS a')
+                $menu_exist_2 = DB::table(self::$table_name . ' AS a')
                         ->select('a.id', 'a.title', 'a.path', 'a.icon', 'a.level', 'a.is_badge', 'a.badge', 'a.badge_id', 'a.badge_value', 'a.parent_id', 'a.group_id')
                         ->where('a.level', '=', 2)
                         ->where('a.parent_id', '=', $value->id)
@@ -44,7 +47,7 @@ class Tbl_user_c_sidebars extends MY_Model {
                 $menu2 = [];
                 if (isset($menu_exist_2) && !empty($menu_exist_2)) {
                     foreach ($menu_exist_2 AS $key => $val) {
-                        $menu_exist_3 = DB::table('tbl_user_c_sidebars AS a')
+                        $menu_exist_3 = DB::table(self::$table_name . ' AS a')
                                 ->select('a.id', 'a.title', 'a.path', 'a.icon', 'a.level', 'a.is_badge', 'a.badge', 'a.badge_id', 'a.badge_value', 'a.parent_id', 'a.group_id')
                                 ->where('a.level', '=', 3)
                                 ->where('a.parent_id', '=', $val->id)
@@ -53,15 +56,40 @@ class Tbl_user_c_sidebars extends MY_Model {
                         $menu3 = [];
                         if (isset($menu_exist_3) && !empty($menu_exist_3)) {
                             foreach ($menu_exist_3 AS $k => $v) {
-                                $menu_exist_4 = DB::table('tbl_user_c_sidebars AS a')
+                                $menu_exist_4 = DB::table(self::$table_name . ' AS a')
                                         ->select('a.id', 'a.title', 'a.path', 'a.icon', 'a.level', 'a.is_badge', 'a.badge', 'a.badge_id', 'a.badge_value', 'a.parent_id', 'a.group_id')
-                                        ->where('a.level', '=', 3)
+                                        ->where('a.level', '=', 4)
                                         ->where('a.parent_id', '=', $v->id)
                                         ->where('a.group_id', '=', $__group_id)
                                         ->get();
                                 $menu4 = [];
                                 if (isset($menu_exist_4) && !empty($menu_exist_4)) {
                                     foreach ($menu_exist_4 AS $l => $w) {
+                                        $menu_exist_5 = DB::table(self::$table_name . ' AS a')
+                                                ->select('a.id', 'a.title', 'a.path', 'a.icon', 'a.level', 'a.is_badge', 'a.badge', 'a.badge_id', 'a.badge_value', 'a.parent_id', 'a.group_id')
+                                                ->where('a.level', '=', 5)
+                                                ->where('a.parent_id', '=', $w->id)
+                                                ->where('a.group_id', '=', $__group_id)
+                                                ->get();
+                                        $menu5 = [];
+                                        if (isset($menu_exist_5) && !empty($menu_exist_5)) {
+                                            foreach ($menu_exist_5 AS $m => $x) {
+                                                $menu5[] = [
+                                                    "id" => $x->id,
+                                                    "title" => $x->title,
+                                                    "path" => $x->path,
+                                                    "icon" => $x->icon,
+                                                    "level" => $x->level,
+                                                    "is_badge" => $x->is_badge,
+                                                    "badge" => $x->badge,
+                                                    "badge_id" => $x->badge_id,
+                                                    "badge_value" => $x->badge_value,
+                                                    "parent_id" => $x->parent_id,
+                                                    "group_id" => $x->group_id,
+                                                    "child" => []
+                                                ];
+                                            }
+                                        }
                                         $menu4[] = [
                                             "id" => $w->id,
                                             "title" => $w->title,
@@ -74,7 +102,7 @@ class Tbl_user_c_sidebars extends MY_Model {
                                             "badge_value" => $w->badge_value,
                                             "parent_id" => $w->parent_id,
                                             "group_id" => $w->group_id,
-                                            "child" => []
+                                            "child" => $menu5
                                         ];
                                     }
                                 }
@@ -130,7 +158,7 @@ class Tbl_user_c_sidebars extends MY_Model {
     }
 
     public static function get_menus($module_id, $level, $parent_id) {
-        return DB::table('tbl_user_c_sidebars AS a')
+        return DB::table(self::$table_name . ' AS a')
                         ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.parent_id', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
                         ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
                         ->where('a.module_id', '=', $module_id)
@@ -141,10 +169,32 @@ class Tbl_user_c_sidebars extends MY_Model {
     }
 
     public static function get_menu_by_id($id, $level, $parent_id) {
-        return DB::table('tbl_user_c_sidebars AS a')
+        return DB::table(self::$table_name . ' AS a')
                         ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.parent_id', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
                         ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
                         ->where('a.id', '=', $id)
+                        ->orderBy('a.rank', 'ASC')
+                        ->get();
+    }
+
+    public static function get_menu_by_parent_id($module_id, $level, $parent_id) {
+        return DB::table(self::$table_name . ' AS a')
+                        ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.parent_id', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
+                        ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
+                        ->where('a.parent_id', '=', $parent_id)
+                        ->where('a.module_id', '=', $module_id)
+                        ->where('a.level', '=', $level)
+                        ->orderBy('a.rank', 'ASC')
+                        ->get();
+    }
+
+    public static function get_menu_by_level($level, $module_id) {
+        return DB::table(self::$table_name . ' AS a')
+                        ->select('a.id', 'a.title', 'a.icon', 'a.path', 'a.badge', 'a.badge_value', 'a.level', 'a.level', 'a.rank', 'a.parent_id', 'a.is_badge', 'a.is_open', 'a.is_active', 'b.id AS module_id', 'b.name AS module_name')
+                        ->leftJoin('tbl_user_a_modules AS b', 'b.id', '=', 'a.module_id')
+                        ->where('a.module_id', '=', $module_id)
+                        ->where('a.level', '=', $level)
+                        ->orderBy('a.parent_id', 'ASC')
                         ->orderBy('a.rank', 'ASC')
                         ->get();
     }

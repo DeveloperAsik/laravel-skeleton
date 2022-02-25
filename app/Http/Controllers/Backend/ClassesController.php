@@ -11,15 +11,14 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Tables\Tbl_user_a_modules;
 use App\Helpers\MyHelper;
 
 /**
- * Description of PermissionController
+ * Description of ClassesController
  *
- * @author I00396.ARIF
+ * @author elitebook
  */
-class PermissionController extends Controller {
+class ClassesController extends Controller {
 
     //put your code here
 
@@ -35,21 +34,20 @@ class PermissionController extends Controller {
             ],
             [
                 'id' => 2,
-                'title' => 'Permission list',
+                'title' => 'Classes list',
                 'icon' => '',
                 'arrow' => true,
-                'path' => config('app.base_extraweb_uri') . '/permission/view'
+                'path' => config('app.base_extraweb_uri') . '/classes/view'
             ],
             [
                 'id' => 2,
-                'title' => 'Permission create new',
+                'title' => 'Create New Classes',
                 'icon' => '',
                 'arrow' => false,
-                'path' => config('app.base_extraweb_uri') . '/permission/create'
+                'path' => config('app.base_extraweb_uri') . '/classes/create'
             ]
         ];
-        $modules = Tbl_user_a_modules::get_all($request);
-        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs', 'modules'));
+        return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs'));
     }
 
     public function edit(Request $request, $id = null) {
@@ -64,17 +62,17 @@ class PermissionController extends Controller {
             ],
             [
                 'id' => 2,
-                'title' => 'Permission',
+                'title' => 'Classes',
                 'icon' => '',
                 'arrow' => true,
-                'path' => config('app.base_extraweb_uri') . '/permission/view'
+                'path' => config('app.base_extraweb_uri') . '/classes/view'
             ],
             [
                 'id' => 3,
-                'title' => 'Permission Edit ( id ' . base64_decode($id) . ' )',
+                'title' => 'Classes Edit ( id ' . base64_decode($id) . ' )',
                 'icon' => '',
                 'arrow' => false,
-                'path' => config('app.base_extraweb_uri') . '/permission/edit/' . $id
+                'path' => config('app.base_extraweb_uri') . '/classes/edit/' . $id
             ]
         ];
         $modules = Tbl_user_a_modules::get_all($request);
@@ -86,18 +84,16 @@ class PermissionController extends Controller {
         $data = $request->json()->all();
         if (isset($data) && !empty($data)) {
             $insert_data = [
-                'route_name' => $data['route_name'],
-                'url' => $data['url'],
+                'namespace' => $data['namespace'],
                 'class' => $data['class'],
                 'method' => $data['method'],
-                'module_id' => $data['module_id'],
                 'is_active' => $data['is_active'],
                 'created_by' => $this->__user_id,
                 'created_date' => date('Y-m-d H:i:s'),
                 'updated_by' => $this->__user_id,
                 'updated_date' => date('Y-m-d H:i:s')
             ];
-            $response = DB::table('tbl_user_d_permissions')->insert($insert_data);
+            $response = DB::table('tbl_user_a_classes')->insert($insert_data);
             if ($response) {
                 return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update modules', 'valid' => true]);
             } else {
@@ -119,18 +115,15 @@ class PermissionController extends Controller {
                     break;
                 default:
                     $update_data = [
-                        'route_name' => $data['route_name'],
-                        'url' => $data['url'],
+                        'namespace' => $data['namespace'],
                         'class' => $data['class'],
                         'method' => $data['method'],
-                        'module_id' => $data['module_id'],
-                        'is_active' => $data['is_active'],
                         'updated_by' => $this->__user_id,
                         'updated_date' => date('Y-m-d H:i:s')
                     ];
                     break;
             }
-            $response = DB::table('tbl_user_d_permissions')->where('id', '=', (int) $id)->update($update_data);
+            $response = DB::table('tbl_user_a_classes')->where('id', '=', (int) $id)->update($update_data);
             if ($response) {
                 return MyHelper::_set_response('json', ['code' => 200, 'message' => 'successfully update modules', 'valid' => true]);
             } else {
@@ -151,10 +144,10 @@ class PermissionController extends Controller {
             ],
             [
                 'id' => 2,
-                'title' => 'Permission list',
+                'title' => 'Classes list',
                 'icon' => '',
                 'arrow' => false,
-                'path' => config('app.base_extraweb_uri') . '/permission/view'
+                'path' => config('app.base_extraweb_uri') . '/classes/view'
             ]
         ];
         return view('Public_html.Layouts.Adminlte.dashboard', compact('title_for_layout', '_breadcrumbs'));

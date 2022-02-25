@@ -28,6 +28,7 @@
 <!-- custome libs -->
 <script src="{{config('app.base_assets_uri')}}/js/base64.js" type="text/javascript"></script>
 <script src="{{config('app.base_assets_uri')}}/js/dateFormat.min.js" type="text/javascript"></script>
+<script src="{{config('app.base_assets_uri')}}/libs/bodymovin/5.6.5/lottie.js" type="text/javascript"></script>
 
 <!-- END PAGE LEVEL PLUGINS -->
 <script>
@@ -66,12 +67,17 @@
 @else
     var _base_media_url = '';
 @endif
+@if(config("app.base_json_uri"))
+    var _path_json = '{{config("app.base_json_uri")}}';
+@else
+    var _path_json = '';
+@endif
 @if(isset($_is_logged_in) && !empty($_is_logged_in)) 
     var _is_logged_in = '{{$_is_logged_in}}';
 @else
     var _is_logged_in = '';
 @endif
-@if($_env)
+@if(isset($_env) && $_env)
     var _env = '{{$_env}}';
 @else
     var _env = '';
@@ -132,7 +138,7 @@
 <!-- load js lib / class / library from controller end here -->
 
 <!-- load global js lib for every controller start here -->
-@if ($_path_app_global_js)
+@if (isset($_path_app_global_js) && !empty($_path_app_global_js))
     @include("{$_path_app_global_js}")
 @endif
 <!-- load global js lib for every controller end here -->
